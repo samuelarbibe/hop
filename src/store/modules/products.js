@@ -8,7 +8,11 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    getProductById: (state) => (id) => {
+        return state.all.find(product => product.id === id);
+    }
+}
 
 // actions
 const actions = {

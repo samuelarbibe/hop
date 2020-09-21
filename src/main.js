@@ -3,6 +3,10 @@ import App from './App.vue'
 import firebase from 'firebase/app';
 import store from './store'
 import router from './router'
+import VueToast from 'vue-toast-notification';
+import VueScrollTo from 'vue-scrollto';
+import 'vue-toast-notification/dist/theme-default.css';
+import "firebase/analytics";
 import './../node_modules/bulma/css/bulma.css';
 import 'bulma/css/bulma.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -22,6 +26,14 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+if (process.env.NODE_ENV !== 'development') {
+  firebase.analytics();
+}
+
+Vue.prototype.$analytics = firebase.analytics();
+Vue.use(VueToast);
+Vue.use(VueScrollTo);
 
 new Vue({
   store,

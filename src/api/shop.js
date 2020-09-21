@@ -6,7 +6,7 @@ export default {
     async getProducts() {
         const db = firebase.firestore();
         const productsRef = db.collection("products");
-        
+
         const snapshot = await productsRef
             .get();
         return snapshot.docs.map((doc) => {
@@ -16,9 +16,18 @@ export default {
         });
     },
 
-    // buyProducts(products, callback, errorCallback) {
-    //     // TODO: implement
-    // }
+    async getShippingOptions() {
+        const db = firebase.firestore();
+        const shippingRef = db.collection("shipping");
+
+        const snapshot = await shippingRef
+            .get();
+        return snapshot.docs.map((doc) => {
+            let option = doc.data();
+            option.id = doc.id;
+            return option;
+        });
+    }
 }
 
 
