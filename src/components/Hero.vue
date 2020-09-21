@@ -1,11 +1,12 @@
 <template>
-  <div class="hero">
+  <div class="hero" id="hero">
     <img
       class="image"
       src="https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2FIMG_6314.jpg?alt=media&token=e7e6496d-01e6-41cc-a840-1032424804b2"
       alt="Placeholder image"
     />
     <div class="title has-text-centered">
+      <h2 class="subtitle is-2 has-text-white">The Tel-Aviv</h2>
       <h1 class="title is-1 has-text-white">House of Pasta</h1>
       <button class="button shop-button is-large" v-scroll-to="'#productList'">Order</button>
     </div>

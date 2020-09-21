@@ -20,7 +20,7 @@ export default {
       "cartProducts",
       "cartSubtotalPrice",
       "cartTotalPrice",
-      "cartDeliveryPrice",
+      "cartShippingPrice",
     ]),
   },
   methods: {
@@ -30,8 +30,8 @@ export default {
     subtotalPrice() {
       return this.cartSubtotalPrice;
     },
-    deliveryPrice() {
-      return this.cartDeliveryPrice;
+    shippingPrice() {
+      return this.cartShippingPrice;
     },
     totalPrice() {
       return this.cartTotalPrice;
@@ -43,7 +43,7 @@ export default {
   mounted() {
     const productsRef = this.products;
     const subtotalPriceRef = this.subtotalPrice;
-    const deliveryPriceRef = this.deliveryPrice;
+    const shippingPriceRef = this.shippingPrice;
     const totalPriceRef = this.totalPrice;
     const approvedRef = this.goToApproved;
     paypal
@@ -66,7 +66,7 @@ export default {
                     },
                     shipping: {
                       currency_code: "ILS",
-                      value: deliveryPriceRef(),
+                      value: shippingPriceRef(),
                     },
                   },
                 },

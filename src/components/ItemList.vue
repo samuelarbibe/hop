@@ -74,15 +74,15 @@
         <h1 class="subtitle is-4">{{cartSubtotalPrice}} ₪</h1>
       </div>
     </div>
-    <div v-if="showDelivery" class="level is-mobile">
+    <div class="level is-mobile">
       <div class="level-left">
-        <h1 class="subtitle is-4">Delivery</h1>
+        <h1 class="subtitle is-4">Shipping</h1>
       </div>
       <div class="right">
-        <h1 class="subtitle is-4">{{cartDeliveryPrice}} ₪</h1>
+        <h1 class="subtitle is-4">{{cartShippingPrice}} ₪</h1>
       </div>
     </div>
-    <div v-if="showTotal" class="level is-mobile">
+    <div  class="level is-mobile">
       <div class="level-left">
         <h1 class="title is-3">Total</h1>
       </div>
@@ -98,8 +98,6 @@ import { mapGetters, mapState } from "vuex";
 export default {
   name: "item-list",
   props: {
-    showDelivery: Boolean,
-    showTotal: Boolean,
     isEditable: Boolean,
   },
   computed: {
@@ -107,7 +105,7 @@ export default {
       "cartProducts",
       "cartSubtotalPrice",
       "cartTotalPrice",
-      "cartDeliveryPrice",
+      "cartShippingPrice",
     ]),
     ...mapState({
       isLoading: (state) => state.cart.isLoading,

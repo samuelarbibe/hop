@@ -19,9 +19,9 @@ export default {
     BottomNavbar,
   },
   created() {
-    this.$store.dispatch("cart/initStore");
-    this.$store.dispatch("products/getAllProducts");
+    // this.$store.dispatch("cart/initStore");
     this.$store.dispatch("cart/loadShippingOptions");
+    this.$store.dispatch("products/getAllProducts");
   },
   computed: {
     ...mapState({
@@ -31,7 +31,7 @@ export default {
   watch: {
     cartItems: {
       handler() {
-        this.$store.dispatch("cart/saveStoreInLocalStorage");
+        // this.$store.dispatch("cart/saveStoreInLocalStorage");
       },
       deep: true,
     },
@@ -40,8 +40,15 @@ export default {
 </script>
 
 <style scoped>
-.html {
-  scroll-behavior: smooth;
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .columns {
@@ -49,7 +56,7 @@ export default {
 }
 
 .frame {
-  margin-top: 80px;
+  margin-top: 60px;
   margin-bottom: 60px;
 }
 </style>

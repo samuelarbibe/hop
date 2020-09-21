@@ -27,7 +27,10 @@ const getters = {
     }, 0)
   },
 
-  cartDeliveryPrice: (state, getters) => {
+  cartShippingPrice: (state, getters) => {
+    if (state.selectedShippingOption == null) {
+      return 0;
+    }
     const price = state.selectedShippingOption.price;
     if (price > 0) {
       const freeAbove = state.selectedShippingOption.free_above;
@@ -39,7 +42,7 @@ const getters = {
   },
 
   cartTotalPrice: (state, getters) => {
-    return getters.cartSubtotalPrice + getters.cartDeliveryPrice;
+    return getters.cartSubtotalPrice + getters.cartShippingPrice;
   }
 }
 
@@ -49,8 +52,12 @@ const actions = {
     commit('setLoading', true);
 
     shop.getShippingOptions().then((options) => {
+      options = options.map(option => {
+        option.selectedShippingDate = option.dates[0];
+        return option;
+      });
       commit('setShippingOptions', options);
-      commit('setSelectedShippingOption', options[0].id);
+      commit('setSelectedShippingOption', options[1].id);
     }).catch((err) => {
       commit('setError', true);
       console.log(err);
@@ -113,6 +120,9 @@ const actions = {
   setSelectedShippingOption({ commit }, selectedOptionId) {
     commit('setSelectedShippingOption', selectedOptionId);
   },
+  setSelectedShippingDateOption({ commit }, { optionId, dateId }) {
+    commit('setSelectedShippingDateOption', { optionId, dateId });
+  }
 }
 
 // mutations
@@ -131,6 +141,11 @@ const mutations = {
 
   setSelectedShippingOption(state, selectedOptionId) {
     state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
+  },
+  setSelectedShippingDateOption(state, { optionId, dateId }) {
+    let option = state.shippingOptions.find(option => option.id === optionId);
+    let selectedDate = option.dates.find(date => date.id === dateId);
+    option.selectedShippingDate = selectedDate;
   },
 
   pushProductToCart(state, { id }) {
@@ -163,7 +178,6 @@ const mutations = {
   },
 
   loadStoreFromLocalStorage(state) {
-
     let localStorageCartData = localStorage.getItem('cartItems');
     let localStorageCheckoutData = localStorage.getItem('cartItems');
 

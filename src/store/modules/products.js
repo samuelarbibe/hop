@@ -9,8 +9,11 @@ const state = () => ({
 
 // getters
 const getters = {
-    getProductById: (state) => (id) => {
-        return state.all.find(product => product.id === id);
+    pastaProducts: (state) => {
+        return state.all.filter(product => product.category === "pasta");
+    },
+    otherProducts: (state) => {
+        return state.all.filter(product => product.category !== "pasta");
     }
 }
 

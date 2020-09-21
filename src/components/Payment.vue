@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="column is-hidden-mobile">
-        <ItemList :showDelivery="true" :showTotal="true" />
+        <ItemList/>
       </div>
     </div>
   </div>

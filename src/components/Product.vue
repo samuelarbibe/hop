@@ -8,8 +8,8 @@
       @click="select()"
     >
       <div class="column product-info">
-        <p class="is-size-6-mobile">{{product.name}}</p>
-        <p class="is-size-6-mobile">{{product.description}}</p>
+        <p class="is-size-5-mobile">{{product.name}}</p>
+        <p class="is-size-6-mobile" dir="rtl">{{product.description}}</p>
         <div class="bottom-content">
           <div class="columns is-mobile">
             <div class="column">
@@ -44,7 +44,7 @@
       </a>
       <div class="column product-info mx-3">
         <h1 class="title is-3">{{product.name}}</h1>
-        <h2 class="subtitle is-4">{{product.description}}</h2>
+        <h2 class="subtitle is-4" dir="rtl">{{product.description}}</h2>
         <div class="bottom-content">
           <div class="columns is-mobile">
             <div class="column">
@@ -191,7 +191,7 @@ export default {
 .product-info {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .is-product-in-cart {

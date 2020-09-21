@@ -15,31 +15,54 @@
           </div>
           <div v-else class="container">
             <div class="control is-size-4">
-              <div v-for="option in shippingOptions" :key="option.id" class="option">
-                <label class="radio">
-                  <input
-                    type="radio"
-                    name="answer"
-                    :value="option.id"
-                    @change="deliveryOptionChanged($event)"
-                    :checked="selectedShippingOption.id == option.id"
-                  />
-                  <span class="px-3">{{option.title}}</span>
-                </label>
-                <br />
+              <div v-for="option in shippingOptions" :key="option.id">
+                <button
+                  dir="rtl"
+                  @click="selectShippingOption(option.id)"
+                  :class="{'button option-button px-3':true, 'is-success':selectedShippingOption.id == option.id}"
+                >
+                  <span class="icon">
+                    <i v-if="selectedShippingOption.id == option.id" class="fas fa-dot-circle"></i>
+                    <i v-else class="far fa-circle"></i>
+                  </span>
+                  <span class="mr-3 is-size-5">{{option.title}}</span>
+                </button>
               </div>
             </div>
-            <div class="notification container my-5">
+            <div class="notification container mt-5 mb-2" dir="rtl">
               <h2 class="subtitle">{{selectedShippingOption.description}}</h2>
+            </div>
+            <div class="my-5" dir="rtl">
+              <h1 v-if="selectedShippingOption.dates.length > 1" class="title is-4">בחר זמן משלוח</h1>
+              <h1 v-else class="title is-4">זמן משלוח</h1>
+            </div>
+            <div class="columns is-mobile">
+              <div
+                class="column"
+                v-for="date in selectedShippingOption.dates"
+                :key="date.from + date.to"
+                dir="rtl"
+              >
+                <a @click="selectShippingDateOption(date.id)">
+                  <div
+                    :class="{'notification date-button px-4': true, 'is-info': selectedShippingOption.selectedShippingDate.id == date.id}"
+                  >
+                    <p>
+                      {{new Date(date.from).toLocaleString('he-IL', {weekday: 'long'})}}
+                      בין 
+                      {{new Date(date.from).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
+                      ל-
+                      {{new Date(date.to).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
+                    </p>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-hidden-mobile">
-        <ItemList
-          :showDelivery="selectedShippingOption != null"
-          :showTotal="selectedShippingOption != null"
-        />
+        <ItemList />
       </div>
     </div>
   </div>
@@ -63,18 +86,31 @@ export default {
     }),
   },
   methods: {
-    deliveryOptionChanged(event) {
-      this.$store.dispatch(
-        "cart/setSelectedShippingOption",
-        event.target.value
-      );
+    selectShippingOption(optionId) {
+      this.$store.dispatch("cart/setSelectedShippingOption", optionId);
+    },
+    selectShippingDateOption(dateId) {
+      this.$store.dispatch("cart/setSelectedShippingDateOption", {
+        optionId: this.selectedShippingOption.id,
+        dateId: dateId,
+      });
+    },
+    toHebrewWeekDay(dayOfWeek) {
+      return dayOfWeek;
     },
   },
 };
 </script>
 
 <style scoped>
-.button {
+.option-button {
   width: 100%;
+  justify-content: right;
+  height: 60px;
+  border: 0;
+}
+
+.date-button {
+  white-space: normal;
 }
 </style>

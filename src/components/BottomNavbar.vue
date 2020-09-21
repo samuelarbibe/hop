@@ -6,7 +6,7 @@
   >
     <div class="column">
       <div class="cart-price ml-2">
-        <b class="is-size-5">{{cartSubtotalPrice}} ₪</b>
+        <b class="is-size-5">{{cartTotalPrice}} ₪</b>
       </div>
     </div>
     <div class="column is-narrow">
@@ -22,7 +22,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "bottom-navbar",
   computed: {
-    ...mapGetters("cart", ["cartSubtotalPrice"]),
+    ...mapGetters("cart", ["cartTotalPrice"]),
     routes() {
       return this.$router.options.routes;
     },
