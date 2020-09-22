@@ -12,9 +12,6 @@
 export default {
   name: "navbar",
   methods: {
-    goToCart() {
-      this.$router.push({ name: "cart" }).catch(() => {});
-    },
     goToHome() {
       this.$router.push({ name: "home" }).catch(() => {});
     },

@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar />
     <router-view class="frame" />
-    <BottomNavbar />
+    <BottomNavbar v-if="cartItems.length > 0" />
   </div>
 </template>
 
@@ -27,14 +27,6 @@ export default {
     ...mapState({
       cartItems: (state) => state.cart.items,
     }),
-  },
-  watch: {
-    cartItems: {
-      handler() {
-        // this.$store.dispatch("cart/saveStoreInLocalStorage");
-      },
-      deep: true,
-    },
   },
 };
 </script>

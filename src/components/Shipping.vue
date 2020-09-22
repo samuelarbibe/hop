@@ -4,7 +4,7 @@
     <div class="columns mx-0">
       <div class="column">
         <div class="container">
-          <div v-if="isLoading" class="loading">
+          <div v-if="isLoading" class="loading has-text-centered">
             <span class="is-1 icon is-large">
               <i class="fas fa-spinner fa-pulse fa-lg"></i>
             </span>
@@ -36,11 +36,11 @@
               <h1 v-if="selectedShippingOption.dates.length > 1" class="title is-4">בחר זמן משלוח</h1>
               <h1 v-else class="title is-4">זמן משלוח</h1>
             </div>
-            <div class="columns is-mobile">
+            <div class="columns is-mobile" :key="selectedShippingOption.selectedShippingDate.id">
               <div
                 class="column"
                 v-for="date in selectedShippingOption.dates"
-                :key="date.from + date.to"
+                :key="date.id"
                 dir="rtl"
               >
                 <a @click="selectShippingDateOption(date.id)">
@@ -49,7 +49,7 @@
                   >
                     <p>
                       {{new Date(date.from).toLocaleString('he-IL', {weekday: 'long'})}}
-                      בין 
+                      בין
                       {{new Date(date.from).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
                       ל-
                       {{new Date(date.to).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
@@ -95,10 +95,8 @@ export default {
         dateId: dateId,
       });
     },
-    toHebrewWeekDay(dayOfWeek) {
-      return dayOfWeek;
-    },
   },
+
 };
 </script>
 

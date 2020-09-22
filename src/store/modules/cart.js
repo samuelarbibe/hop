@@ -47,39 +47,51 @@ const getters = {
 }
 
 const actions = {
-  loadShippingOptions({ commit }) {
+  loadShippingOptions({ commit, dispatch }) {
     commit('setError', false);
     commit('setLoading', true);
 
-    shop.getShippingOptions().then((options) => {
-      options = options.map(option => {
-        option.selectedShippingDate = option.dates[0];
-        return option;
-      });
-      commit('setShippingOptions', options);
-      commit('setSelectedShippingOption', options[1].id);
-    }).catch((err) => {
-      commit('setError', true);
-      console.log(err);
-    }).finally(() => {
-      commit('setLoading', false)
-    });
+    shop.updateShippingOptions({
+      updateShippingCb: (updatedShippingOptions) => dispatch('onShippingUpdate', updatedShippingOptions),
+      updateDatesCb: (shippingId, updatedShippingDates) => dispatch('onShippingDatesUpdate', { shippingId, updatedShippingDates }),
+      errorCb: (err) => dispatch('onUpdateErr', err),
+      finallyCb: () => dispatch('afterUpdate'),
+    }
+    );
   },
 
-  checkout({ commit, state }, products) {
-    const savedCartItems = [...state.items]
-    commit('setCheckoutStatus', null)
-    // empty cart
-    commit('setCartItems', { items: [] })
-    shop.buyProducts(
-      products,
-      () => commit('setCheckoutStatus', 'successful'),
-      () => {
-        commit('setCheckoutStatus', 'failed')
-        commit('setCartItems', { items: savedCartItems })
-      }
-    )
+  onUpdateErr({ commit }, err) {
+    commit('setError', true);
+    console.log(err);
   },
+  onShippingUpdate({ commit }, updatedShippingOptions) {
+    console.log('shipping options updated');
+
+    commit('setShippingOptions', updatedShippingOptions);
+    commit('setSelectedShippingOption', updatedShippingOptions[0].id);
+  },
+  onShippingDatesUpdate({ commit, state }, { shippingId, updatedShippingDates }) {
+    let shippingOption = state.shippingOptions.find(option => option.id === shippingId);
+    shippingOption.dates = updatedShippingDates;
+    console.log(`shipping dates updated for ${shippingOption.name}`);
+
+    if (shippingOption.selectedShippingDate == undefined) {
+      shippingOption = {
+        ...shippingOption,
+        selectedShippingDate: shippingOption.dates[0],
+      }
+    }
+
+    commit('updateShippingOption', shippingOption);
+
+    if(state.shippingOptions.every((option) => option.dates != undefined)){
+      commit('setLoading', false);
+    }
+  },
+
+  // checkout(products) {
+
+  // },
 
   addProductToCart({ state, commit }, product) {
     commit('setCheckoutStatus', null)
@@ -96,6 +108,7 @@ const actions = {
       }
     }
   },
+
   decrementProductQuantity({ state, commit }, product) {
     const cartItem = state.items.find(item => item.id === product.id)
     if (!cartItem) {
@@ -139,6 +152,12 @@ const mutations = {
     state.shippingOptions = options;
   },
 
+  updateShippingOption(state, updatedShippingOption) {
+    const oldShippingOption = state.shippingOptions.find(option => option.id === updatedShippingOption.id);
+    oldShippingOption.dates = updatedShippingOption.dates;
+    oldShippingOption.selectedShippingDate = updatedShippingOption.selectedShippingDate;
+  },
+
   setSelectedShippingOption(state, selectedOptionId) {
     state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
   },
@@ -146,6 +165,8 @@ const mutations = {
     let option = state.shippingOptions.find(option => option.id === optionId);
     let selectedDate = option.dates.find(date => date.id === dateId);
     option.selectedShippingDate = selectedDate;
+    state.selectedShippingOption = null;
+    state.selectedShippingOption = option;
   },
 
   pushProductToCart(state, { id }) {

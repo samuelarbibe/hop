@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <h1 class="title is-3 shipping-header">Payment</h1>
+    <button class="button" @click="checkout()">Checkout</button>
     <div class="columns mx-0">
       <div class="column">
         <div class="container">
@@ -14,13 +14,14 @@
         </div>
       </div>
       <div class="column is-hidden-mobile">
-        <ItemList/>
+        <ItemList />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import PayPalCheckout from "./PayPal";
 import ItemList from "./ItemList";
 

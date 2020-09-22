@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" class="loading">
+  <div v-if="isLoading" class="loading has-text-centered">
     <span class="is-1 icon is-large">
       <i class="fas fa-spinner fa-pulse fa-lg"></i>
     </span>

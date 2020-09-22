@@ -19,19 +19,26 @@ const getters = {
 
 // actions
 const actions = {
-    getAllProducts({ commit }) {
+    getAllProducts({ commit, dispatch }) {
         commit('setError', false);
         commit('setLoading', true);
 
-        shop.getProducts().then((products) => {
-            commit('setProducts', products)
-        }).catch((err) => {
-            commit('setError', true);
-            console.log(err);
-        }).finally(() => {
-            commit('setLoading', false)
-        });
-    }
+        shop.updateProducts({
+            updateCb: (updatedProducts) => dispatch('onUpdate', updatedProducts),
+            errorCb: (err) => dispatch('onUpdateErr', err),
+            finallyCb: () => dispatch('afterUpdate'),
+        }
+        );
+    },
+    onUpdateErr({ commit }, err) {
+        commit('setError', true);
+        console.log(err);
+    },
+    onUpdate({ commit }, updatedProducts) {
+        console.log('products updated');
+        commit('setProducts', updatedProducts);
+        commit('setLoading', false);
+    },
 }
 
 // mutations

@@ -24,5 +24,11 @@
     "predeploy": [
       "npm --prefix \"$RESOURCE_DIR\" run lint"
     ]
+  },
+  "emulators": {
+    "firestore": {
+      "host": "localhost",
+      "port": "9000"
+    }
   }
 }

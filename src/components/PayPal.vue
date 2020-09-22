@@ -48,51 +48,19 @@ export default {
     const approvedRef = this.goToApproved;
     paypal
       .Buttons({
-        createOrder(data, actions) {
-          return actions.order.create({
-            order_application_context: {
-              brand_name: "HoP",
-              local: "he-IL",
+        createOrder() {
+          return fetch("http://localhost:5001/hop-tlv/us-central1/checkout", {
+            method: "post",
+            headers: {
+              "content-type": "application/json",
             },
-            purchase_units: [
-              {
-                amount: {
-                  currency_code: "ILS",
-                  value: totalPriceRef(),
-                  breakdown: {
-                    item_total: {
-                      currency_code: "ILS",
-                      value: subtotalPriceRef(),
-                    },
-                    shipping: {
-                      currency_code: "ILS",
-                      value: shippingPriceRef(),
-                    },
-                  },
-                },
-                items: productsRef().map((item) => {
-                  return {
-                    name: item.name,
-                    description: item.description,
-                    unit_amount: {
-                      currency_code: "ILS",
-                      value: item.price,
-                    },
-                    quantity: item.quantity,
-                  };
-                }),
-              },
-            ],
-          });
-        },
-        onApprove(data, actions) {
-          // This function captures the funds from the transaction.
-          return actions.order.capture().then(function (details) {
-            console.log(details);
-            approvedRef();
-            // This function shows a transaction success message to your buyer.
-            // alert("Transaction completed by " + details.payer.name.given_name);
-          });
+          })
+            .then(function (res) {
+              return res.json();
+            })
+            .then(function (data) {
+              return data.orderID; // Use the same key name for order ID on the client and server
+            });
         },
       })
       .render("#paypal-button-container");
