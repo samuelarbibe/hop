@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="container section">
     <h1 class="title is-3">Newsletter</h1>
     <p class="subtitle">Get notified about new products</p>
     <div class="columns is-desktop">

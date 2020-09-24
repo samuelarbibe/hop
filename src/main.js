@@ -5,12 +5,12 @@ import store from './store'
 import router from './router'
 import VueToast from 'vue-toast-notification';
 import VueScrollTo from 'vue-scrollto';
+import VueSweetalert2 from 'vue-sweetalert2';
 import 'vue-toast-notification/dist/theme-default.css';
 import "firebase/analytics";
-import './../node_modules/bulma/css/bulma.css';
 import 'bulma/css/bulma.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'bulma-social/bin/bulma-social.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 Vue.config.productionTip = false
 
@@ -34,6 +34,7 @@ if (process.env.NODE_ENV !== 'development') {
 Vue.prototype.$analytics = firebase.analytics();
 Vue.use(VueToast);
 Vue.use(VueScrollTo);
+Vue.use(VueSweetalert2);
 
 new Vue({
   store,

@@ -18,7 +18,7 @@ export default {
         }, errorCb, finallyCb)
     },
 
-    updateShippingOptions({ updateShippingCb, updateDatesCb, errorCb, finallyCb }) {
+    updateShippingOptions({ updateShippingCb, errorCb }) {
         const db = firebase.firestore();
         const shippingRef = db.collection("shipping").where("inventory", ">", 0);
 
@@ -26,33 +26,21 @@ export default {
             let updatedShippingOptions = [];
             snapshot.forEach((doc) => {
                 let option = doc.data();
-                option.dates = [];
+                option.dates = option.dates.map((date) => {
+                    return {
+                        id: date.id,
+                        from: date.from.seconds * 1000,
+                        to: date.to.seconds * 1000
+                    }
+                });
                 option.id = doc.id;
-                updateShippingDates(doc.id, { updateDatesCb, errorCb, finallyCb });
                 updatedShippingOptions.push(option);
             });
             updateShippingCb(updatedShippingOptions);
-        }, errorCb, finallyCb);
-
-        const updateShippingDates = (shippingId, { updateDatesCb, errorCb, finallyCb }) => {
-            const db = firebase.firestore();
-            const datesRef = db.collection("shipping").doc(shippingId).collection("dates");
-
-            datesRef.onSnapshot((snapshot) => {
-                let updatedShippingDates = [];
-                snapshot.forEach((doc) => {
-                    updatedShippingDates.push({
-                        id: doc.id,
-                        from: doc.data().from.seconds * 1000,
-                        to: doc.data().to.seconds * 1000
-                    })
-                });
-                updateDatesCb(shippingId, updatedShippingDates);
-            }, errorCb, finallyCb);
-        }
+        }, errorCb);
     },
 
-    async subscribeToNewsletter(email, { successCb, usedEmailCb, errorCb }) {
+    subscribeToNewsletter(email, { successCb, usedEmailCb, errorCb }) {
         const db = firebase.firestore();
         const subsRef = db.collection("subscribers");
 
@@ -73,10 +61,6 @@ export default {
             errorCb(err);
         });
     },
-    checkout(){
-        firebase.functions().useFunctionsEmulator("http://localhost:5001");
-        return firebase.functions().httpsCallable('checkout');
-    }
 }
 
 

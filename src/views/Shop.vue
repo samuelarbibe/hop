@@ -1,5 +1,5 @@
 <template>
-  <div class>
+  <div>
     <Hero />
     <About />
     <ProductList id="productList" />

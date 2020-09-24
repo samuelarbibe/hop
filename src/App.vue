@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar />
+    <CartNotSyncDialog v-if="!this.cartIsInSync" />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
@@ -11,12 +12,14 @@ import { mapState } from "vuex";
 
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
+import CartNotSyncDialog from "./components/CartNotSyncDialog";
 
 export default {
   name: "App",
   components: {
     Navbar,
     BottomNavbar,
+    CartNotSyncDialog,
   },
   created() {
     // this.$store.dispatch("cart/initStore");
@@ -26,6 +29,7 @@ export default {
   computed: {
     ...mapState({
       cartItems: (state) => state.cart.items,
+      cartIsInSync: (state) => state.cart.isInSync,
     }),
   },
 };
@@ -34,17 +38,13 @@ export default {
 <style scoped>
 /* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.columns {
-  align-items: stretch;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .frame {

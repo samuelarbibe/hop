@@ -13,7 +13,7 @@ export default {
   name: "navbar",
   methods: {
     goToHome() {
-      this.$router.push({ name: "home" }).catch(() => {});
+      this.$router.push({ name: "shop" }).catch(() => {});
     },
   },
 };
@@ -22,6 +22,7 @@ export default {
 <style scoped>
 .navbar {
   margin: 0;
+  z-index: 999;
 }
 
 img {

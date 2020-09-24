@@ -9,21 +9,31 @@
       <h1 class="title is-4">There was an error loading the site</h1>
       <h2 class="subtitle">Please try again later.</h2>
     </div>
-    <div v-else class="columns mx-0 my-0 is-multiline">
+    <div v-else class="">
       <h1 class="title is-3 mx-4 my-5">Menu</h1>
-      <div
-        class="column px-0 is-one-third is-narrow"
-        v-for="product in pastaProducts"
-        :key="product.id"
-      >
-        <product ref="products" :product="product" @select="unslectOtherProducts" />
-      </div>
-      <div
-        class="column px-0 is-one-third is-narrow"
-        v-for="product in otherProducts"
-        :key="product.id"
-      >
-        <product ref="products" :product="product" @select="unslectOtherProducts" />
+      <div class="columns mx-0 my-0 is-multiline">
+        <div
+          class="column px-0 is-one-third is-narrow"
+          v-for="product in pastaProducts"
+          :key="product.id"
+        >
+          <product
+            ref="products"
+            :product="product"
+            @select="unslectOtherProducts"
+          />
+        </div>
+        <div
+          class="column px-0 is-one-third is-narrow"
+          v-for="product in otherProducts"
+          :key="product.id"
+        >
+          <product
+            ref="products"
+            :product="product"
+            @select="unslectOtherProducts"
+          />
+        </div>
       </div>
     </div>
   </div>

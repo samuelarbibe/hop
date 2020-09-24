@@ -38,7 +38,7 @@ export default {
       return route && { name: route.name };
     },
     price() {
-      if (this.$route.name === "home") {
+      if (this.$route.name === "shop") {
         return this.cartSubtotalPrice;
       }
       return this.cartTotalPrice;
@@ -50,6 +50,7 @@ export default {
 <style scoped>
 .navbar {
   margin: 0px !important;
+  z-index: 999;
 }
 .cart-price {
   display: flex;

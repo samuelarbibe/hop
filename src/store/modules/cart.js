@@ -3,11 +3,11 @@ import shop from '../../api/shop'
 const state = () => ({
   items: [],
   shippingOptions: [],
-  checkoutStatus: null,
   selectedShippingOption: null,
-  saveToLocalStorage: true,
   isError: false,
   isLoading: false,
+  isInSync: true,
+  isInCheckout: false,
 })
 
 const getters = {
@@ -53,48 +53,42 @@ const actions = {
 
     shop.updateShippingOptions({
       updateShippingCb: (updatedShippingOptions) => dispatch('onShippingUpdate', updatedShippingOptions),
-      updateDatesCb: (shippingId, updatedShippingDates) => dispatch('onShippingDatesUpdate', { shippingId, updatedShippingDates }),
       errorCb: (err) => dispatch('onUpdateErr', err),
-      finallyCb: () => dispatch('afterUpdate'),
-    }
-    );
+    });
   },
 
   onUpdateErr({ commit }, err) {
     commit('setError', true);
     console.log(err);
   },
-  onShippingUpdate({ commit }, updatedShippingOptions) {
+
+  onShippingUpdate({ state, commit }, updatedShippingOptions) {
     console.log('shipping options updated');
 
-    commit('setShippingOptions', updatedShippingOptions);
-    commit('setSelectedShippingOption', updatedShippingOptions[0].id);
-  },
-  onShippingDatesUpdate({ commit, state }, { shippingId, updatedShippingDates }) {
-    let shippingOption = state.shippingOptions.find(option => option.id === shippingId);
-    shippingOption.dates = updatedShippingDates;
-    console.log(`shipping dates updated for ${shippingOption.name}`);
-
-    if (shippingOption.selectedShippingDate == undefined) {
-      shippingOption = {
-        ...shippingOption,
-        selectedShippingDate: shippingOption.dates[0],
+    updatedShippingOptions = updatedShippingOptions.map(shippingOption => {
+      if (shippingOption.selectedShippingDate == undefined) {
+        return {
+          ...shippingOption,
+          selectedShippingDate: shippingOption.dates[0],
+        }
       }
+      return shippingOption;
+    });
+
+    commit('setShippingOptions', updatedShippingOptions);
+
+    if (!updatedShippingOptions.includes(option => option.id === state.selectedShippingOption.id)) {
+      commit('setSelectedShippingOption', updatedShippingOptions[0].id);
     }
 
-    commit('updateShippingOption', shippingOption);
-
-    if(state.shippingOptions.every((option) => option.dates != undefined)){
-      commit('setLoading', false);
-    }
+    commit('setLoading', false);
   },
 
-  // checkout(products) {
-
-  // },
+  emptyCart({ commit }) {
+    commit('setCartItems', { items: [] });
+  },
 
   addProductToCart({ state, commit }, product) {
-    commit('setCheckoutStatus', null)
     if (product.inventory > 0) {
       const cartItem = state.items.find(item => item.id === product.id)
       if (!cartItem) {
@@ -124,6 +118,18 @@ const actions = {
   removeProductFromCart({ commit }, product) {
     commit('removeProductFromCart', { id: product.id });
   },
+  setProductQuantity({ state, commit }, { product, quantity }) {
+    const cartItem = state.items.find(item => item.id === product.id)
+    if (!cartItem) {
+      throw Error('Could decrement as item is not in cart.');
+    } else {
+      if (quantity <= 0) {
+        commit('removeProductFromCart', { id: cartItem.id });
+      } else {
+        commit('setItemQuantity', { id: product.id, quantity: quantity });
+      }
+    }
+  },
   initStore({ commit }) {
     commit('loadStoreFromLocalStorage');
   },
@@ -135,6 +141,12 @@ const actions = {
   },
   setSelectedShippingDateOption({ commit }, { optionId, dateId }) {
     commit('setSelectedShippingDateOption', { optionId, dateId });
+  },
+  setCartIsSync({ commit }, isInSync) {
+    commit('setCartIsSync', isInSync);
+  },
+  setIsInCheckout({ commit }, isInCheckout) {
+    commit('setIsInCheckout', isInCheckout);
   }
 }
 
@@ -152,15 +164,10 @@ const mutations = {
     state.shippingOptions = options;
   },
 
-  updateShippingOption(state, updatedShippingOption) {
-    const oldShippingOption = state.shippingOptions.find(option => option.id === updatedShippingOption.id);
-    oldShippingOption.dates = updatedShippingOption.dates;
-    oldShippingOption.selectedShippingDate = updatedShippingOption.selectedShippingDate;
-  },
-
   setSelectedShippingOption(state, selectedOptionId) {
     state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
   },
+
   setSelectedShippingDateOption(state, { optionId, dateId }) {
     let option = state.shippingOptions.find(option => option.id === optionId);
     let selectedDate = option.dates.find(date => date.id === dateId);
@@ -185,6 +192,11 @@ const mutations = {
     cartItem.quantity--;
   },
 
+  setItemQuantity(state, { id, quantity }) {
+    const cartItem = state.items.find(item => item.id === id)
+    cartItem.quantity = quantity;
+  },
+
   incrementItemQuantity(state, { id }) {
     const cartItem = state.items.find(item => item.id === id)
     cartItem.quantity++;
@@ -194,26 +206,24 @@ const mutations = {
     state.items = items;
   },
 
-  setCheckoutStatus(state, status) {
-    state.checkoutStatus = status;
+  setCartIsSync(state, isInSync) {
+    state.isInSync = isInSync;
+  },
+
+  setIsInCheckout(state, isInCheckout) {
+    state.isInSync = isInCheckout;
   },
 
   loadStoreFromLocalStorage(state) {
     let localStorageCartData = localStorage.getItem('cartItems');
-    let localStorageCheckoutData = localStorage.getItem('cartItems');
 
     if (localStorageCartData) {
       state.items = JSON.parse(localStorageCartData);
-    }
-
-    if (localStorageCheckoutData) {
-      state.checkoutStatus = JSON.parse(localStorageCheckoutData);
     }
   },
 
   saveStoreInLocalStorage(state) {
     localStorage.setItem('cartItems', JSON.stringify(state.items));
-    localStorage.setItem('checkoutStatus', JSON.stringify(state.checkoutStatus));
   },
 }
 

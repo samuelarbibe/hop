@@ -1,44 +1,100 @@
+/* eslint-disable promise/no-nesting */
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 
-const paypal = require('@paypal/checkout-server-sdk');
-// 1. Set up your server to make calls to PayPal
+const admin = require('firebase-admin');
+admin.initializeApp();
+const db = admin.firestore();
 
-// 1b. Import the PayPal SDK client that was created in `Set up Server-Side SDK`.
-/**
- *
- * PayPal HTTP client dependency
- */
-let clientId = "AfmG4QqEw-HCpIVoa0onYWSoeZAtRgXIPoe4_HNF1g_PGrG1PXkC_i8zQZYBFryvVdrL2XNU2kezJJ8l";
-let clientSecret = "EJNakZWPH-6QoxbPL6B8rIjhO4Q2gPHU19EOCmG_lOupcr1WIVzEN5Vn2BM82bYVeDGpUfnzU2y6rI7-";
+const paypal = require('@paypal/checkout-server-sdk');
+
+let clientId = functions.config().paypal.client_id;
+let clientSecret = functions.config().paypal.client_secret;
 // This sample uses SandboxEnvironment. In production, use LiveEnvironment
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
-
-// 2. Set up your server to receive a call from the client
-exports.checkout = functions.https.onRequest((req, res) => {
-  // 3. Call PayPal to set up a transaction
+exports.order = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
-    request.requestBody({
-      intent: 'CAPTURE',
-      purchase_units: [{
-        amount: {
-          currency_code: 'ILS',
-          value: '220.00'
-        }
-      }]
-    });
+    request.requestBody(req.body);
+
+    console.log(`creating order...`);
 
     return client.execute(request).then((order) => {
+      console.log(`order ${order.result.id} created.`);
       return res.status(200).json({
         orderID: order.result.id
       });
     }).catch((err) => {
       console.error(err);
-      return res.send(500);
+      return res.sendStatus(500);
+    });
+  });
+});
+
+exports.process = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    console.log(`order ${order.id} approved. getting order details...`);
+
+    const orderID = req.body.orderID;
+    let request = new paypal.orders.OrdersGetRequest(orderID);
+
+    return client.execute(request).then((order) => {
+
+      // TODO: check that all the items are in stock
+
+      const ref = db.collection('orders');
+      // eslint-disable-next-line promise/no-nesting
+      return ref.doc(order.id).set(order).then(() => {
+        console.log(`order ${order.id} saved in database.`);
+        return res.sendStatus(200);
+      });
+    })
+      .catch((err) => {
+        console.error(err);
+        return res.sendStatus(500);
+      });
+  });
+});
+
+exports.charge = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    console.log(`order ${req.body.orderID} approved. capturing order...`);
+
+    const orderID = req.body.orderID;
+    const shipping = req.body.shipping;
+
+    const request = new paypal.orders.OrdersCaptureRequest(orderID);
+    request.requestBody({});
+
+    return client.execute(request).then((capture) => {
+      console.log(`order ${capture.result.id} captured.`);
+
+      let request = new paypal.orders.OrdersGetRequest(orderID);
+
+      return client.execute(request).then((order) => {
+        console.log(`saving order ${order.result.id} in db...`);
+
+        const ref = db.collection('orders');
+        return ref.doc(order.result.id).set({
+          ...order.result,
+          shipping : {
+            id: shipping.id,
+            name: shipping.name,
+            title: shipping.title,
+            type: shipping.type,
+            date: shipping.selectedShippingDate,
+          }
+        }).then(() => {
+          console.log(`order ${order.result.id} saved in database.`);
+          return res.sendStatus(200);
+        });
+      })
+    }).catch((err) => {
+      console.error(err);
+      return res.sendStatus(500);
     });
   });
 });

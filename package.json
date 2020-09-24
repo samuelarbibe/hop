@@ -18,7 +18,8 @@
     "vue": "^2.6.11",
     "vue-router": "^3.4.3",
     "vue-scrollto": "^2.18.2",
-    "vue-toast-notification": "^0.5.3",
+    "vue-sweetalert2": "^3.0.8",
+    "vue-toast-notification": "^0.5.4",
     "vuex": "^3.5.1"
   },
   "devDependencies": {

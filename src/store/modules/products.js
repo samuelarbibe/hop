@@ -34,7 +34,22 @@ const actions = {
         commit('setError', true);
         console.log(err);
     },
-    onUpdate({ commit }, updatedProducts) {
+    onUpdate({ commit, rootState, dispatch }, updatedProducts) {
+        let invalidCartQuantity = false;
+        rootState.cart.items.forEach((item) => {
+            const product = updatedProducts.find(product => product.id === item.id);
+            if(product === undefined) {
+                dispatch('cart/setProductQuantity', { product: item, quantity: 0 }, { root: true });
+                invalidCartQuantity = true;
+            }
+            else if (item.quantity > product.inventory) {
+                dispatch('cart/setProductQuantity', { product: item, quantity: product.inventory }, { root: true });
+                invalidCartQuantity = true;
+            }
+        });
+        if (invalidCartQuantity) {
+            commit('cart/setCartIsSync', false, {root: true});
+        }
         console.log('products updated');
         commit('setProducts', updatedProducts);
         commit('setLoading', false);

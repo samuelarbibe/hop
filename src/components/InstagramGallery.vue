@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="container section">
     <h1 class="title is-3">Follow Us</h1>
     <a class="button" href="https://www.instagram.com/hoptlv/?hl=en">
       <span class="icon is-large">

@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="container section">
     <h1 class="title is-3">Contact Us</h1>
     <a class="button is-success">
       <span class="icon is-large">

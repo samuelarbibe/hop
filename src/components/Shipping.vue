@@ -1,5 +1,5 @@
 <template>
-  <div class="section">
+  <div class="container section">
     <h1 class="title is-3 shipping-header">Shipping</h1>
     <div class="columns mx-0">
       <div class="column">
