@@ -7,7 +7,7 @@
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
       </span>
     </div>
-    <div v-else-if="isError" class="notification is-error" dir="rtl">
+    <div v-else-if="isError" class="notification is-danger" dir="rtl">
       <h1 class="title is-4">התשלום לא התבצע.</h1>
     </div>
     <div v-else-if="isSuccess" class="notification is-success" dir="rtl">

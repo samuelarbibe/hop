@@ -26,13 +26,6 @@ export default {
             let updatedShippingOptions = [];
             snapshot.forEach((doc) => {
                 let option = doc.data();
-                option.dates = option.dates.map((date) => {
-                    return {
-                        id: date.id,
-                        from: date.from.seconds * 1000,
-                        to: date.to.seconds * 1000
-                    }
-                });
                 option.id = doc.id;
                 updatedShippingOptions.push(option);
             });

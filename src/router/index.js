@@ -4,14 +4,14 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-import Shop from './views/Shop.vue';
-import Shipping from './components/Shipping.vue';
-import Checkout from './components/Checkout.vue';
-import store from "./store/index.js";
+import Shop from '../views/Shop.vue';
+import Shipping from '../components/Shipping.vue';
+import Checkout from '../components/Checkout.vue';
+import store from "../store/index.js";
 
 const router = new VueRouter({
     mode: 'history',
-    base: __dirname,
+    base: process.env.BASE_URL,
     routes: [
         { path: '', name: 'shop', component: Shop },
         {

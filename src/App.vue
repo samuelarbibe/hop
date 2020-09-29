@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <Navbar />
-    <CartNotSyncDialog v-if="!this.cartIsInSync" />
+    <CartNotSyncDialog v-if="!this.isCartSynced" />
+    <ShippingNotSyncDialog v-if="!this.isShippingSynced" />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
@@ -13,6 +14,7 @@ import { mapState } from "vuex";
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
 import CartNotSyncDialog from "./components/CartNotSyncDialog";
+import ShippingNotSyncDialog from "./components/ShippingNotSyncDialog";
 
 export default {
   name: "App",
@@ -20,6 +22,7 @@ export default {
     Navbar,
     BottomNavbar,
     CartNotSyncDialog,
+    ShippingNotSyncDialog,
   },
   created() {
     // this.$store.dispatch("cart/initStore");
@@ -29,7 +32,8 @@ export default {
   computed: {
     ...mapState({
       cartItems: (state) => state.cart.items,
-      cartIsInSync: (state) => state.cart.isInSync,
+      isCartSynced: (state) => state.cart.isCartSynced,
+      isShippingSynced: (state) => state.cart.isShippingSynced,
     }),
   },
 };

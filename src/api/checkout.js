@@ -2,7 +2,7 @@ import 'firebase/firebase-firestore';
 import 'firebase/firebase-functions';
 
 export default {
-    order(data,  errorCb) {
+    order(data, errorCb) {
         return fetch(`${process.env.VUE_APP_FUNCTIONS_HOST}/order`, {
             method: "POST",
             headers: {
@@ -16,11 +16,11 @@ export default {
             .then(function (data) {
                 return data.orderID;
             }).catch((err) => {
-                console.log(err);
+                console.error(err);
                 errorCb(err);
             });
     },
-    charge(data, successCb, errorCb) {
+    charge(data, actions, successCb, errorCb) {
         return fetch(`${process.env.VUE_APP_FUNCTIONS_HOST}/charge`, {
             method: "POST",
             headers: {
@@ -28,14 +28,21 @@ export default {
             },
             body: JSON.stringify(data),
         })
-            .then(function () {
+            .then(() => {
                 successCb();
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err);
                 errorCb();
             });
     },
+    checkShippingAddress(data, actions) {
+        const zipCode = data.shipping_address.postal_code;
+        if (zipCode >= 61000 && zipCode <= 76104) {
+            return actions.resolve();
+        }
+        return actions.reject();
+    }
 }
 
 

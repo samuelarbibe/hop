@@ -90,21 +90,24 @@ export default {
 
     paypal
       .Buttons({
+        onClick: () => {
+          // TODO implement
+          // create request body
+          // remove all items from stock
+        },
         createOrder: () => checkout.order(requestBodyRef(), errorRef),
-        onApprove: (data) => {
+        onApprove: (data, actions) => {
           processingRef();
           const chargingData = {
             orderID: data.orderID,
-            shipping: shippingRef
-          }
-          return checkout.charge(chargingData, approvedRef, errorRef);
+            shipping: shippingRef,
+          };
+          return checkout.charge(chargingData, actions, approvedRef, errorRef);
         },
-        onShippingChange: (data, actions) => {
-          const zipCode = data.shipping_address.postal_code;
-          if (zipCode >= 61000 && zipCode <= 76104) {
-            return actions.resolve();
-          }
-          return actions.reject();
+        onShippingChange: (data, actions) =>
+          checkout.checkShippingAddress(data, actions),
+        onCancle: () => {
+          // TODO implement
         },
         onError: (err) => errorRef(),
       })

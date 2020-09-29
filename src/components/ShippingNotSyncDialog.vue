@@ -5,18 +5,18 @@
         <i class="fas fa-info-circle fa-lg"></i>
       </span>
     </div>
-    <h1 class="title is-3">שינוי במלאי</h1>
-    <p class="subtitle is-size-5">חלק מהמוצרים שבחרת כבר לא זמינים. עבור על העגלה שלך שוב כדי לוודא</p>
-    <button class="button is-info" @click="setSynced()">עבור לעגלה</button>
+    <h1 class="title is-3">שינוי במשלוח</h1>
+    <p class="subtitle is-size-5">המשלוח שבחרת עודכן על ידי בעל החנות. חזור כדי לבחור אותו שוב</p>
+    <button class="button is-info" @click="setSynced()">עבור למשלוח</button>
   </div>
 </template>
 <script>
 export default {
-  name: "cart-not-synced-dialog",
+  name: "shipping-not-synced-dialog",
   methods: {
     setSynced() {
-      this.$router.push({ name: "shop" }).catch(() => {});
-      this.$store.dispatch("cart/setIsCartSynced", true);
+      this.$router.push({ name: "shipping" }).catch(() => {});
+      this.$store.dispatch("cart/setIsShippingSynced", true);
     },
   },
 };

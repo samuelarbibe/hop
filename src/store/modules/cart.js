@@ -6,7 +6,8 @@ const state = () => ({
   selectedShippingOption: null,
   isError: false,
   isLoading: false,
-  isInSync: true,
+  isCartSynced: true,
+  isShippingSynced: true,
   isInCheckout: false,
 })
 
@@ -65,20 +66,66 @@ const actions = {
   onShippingUpdate({ state, commit }, updatedShippingOptions) {
     console.log('shipping options updated');
 
-    updatedShippingOptions = updatedShippingOptions.map(shippingOption => {
-      if (shippingOption.selectedShippingDate == undefined) {
-        return {
-          ...shippingOption,
-          selectedShippingDate: shippingOption.dates[0],
-        }
+    updatedShippingOptions = updatedShippingOptions.map(updatedShippingOption => {
+      return {
+        ...updatedShippingOption,
+        selectedShippingDate: updatedShippingOption.dates[0],
       }
-      return shippingOption;
     });
 
-    commit('setShippingOptions', updatedShippingOptions);
+    if (state.selectedShippingOption != null) {
+      commit('setShippingOptions', updatedShippingOptions);
 
-    if (!updatedShippingOptions.includes(option => option.id === state.selectedShippingOption.id)) {
-      commit('setSelectedShippingOption', updatedShippingOptions[0].id);
+      const updatedSelectedShippingOption = updatedShippingOptions.find(option => option.id === state.selectedShippingOption.id);
+
+      // If selected option no longer exists
+      if (updatedSelectedShippingOption === undefined) {
+        commit('setIsShippingSynced', false);
+        commit('setSelectedShippingOption', updatedShippingOptions[0].id);
+        console.log('selected option no longer exists');
+      } else {
+
+        // If selected option has changed
+        if (
+          updatedSelectedShippingOption.price !== state.selectedShippingOption.price ||
+          updatedSelectedShippingOption.free_above !== state.selectedShippingOption.free_above
+        ) {
+          commit('setIsShippingSynced', false);
+          console.log('selected option changed');
+          commit('setSelectedShippingOption', updatedSelectedShippingOption.id);
+        }
+
+        const currentSelectedShippingDate = state.selectedShippingOption.selectedShippingDate;
+        const updatedSelectedDate = updatedSelectedShippingOption.dates.find(date => date.id === currentSelectedShippingDate.id);
+
+        // If selected date option no longer exists
+        if (updatedSelectedDate === undefined) {
+          commit('setIsShippingSynced', false);
+          console.log('selected date no longer exists');
+
+          commit('setSelectedShippingDateOption',
+            {
+              optionId: updatedSelectedShippingOption.id,
+              dateId: updatedSelectedShippingOption.dates[0].id
+            });
+
+          // If selected date has changed
+        } else if (
+          updatedSelectedDate.from !== currentSelectedShippingDate.from ||
+          updatedSelectedDate.to !== currentSelectedShippingDate.to
+        ) {
+          commit('setIsShippingSynced', false);
+          console.log('selected date changed');
+          commit('setSelectedShippingDateOption',
+            {
+              optionId: updatedSelectedShippingOption.id,
+              dateId: updatedSelectedDate.id
+            });
+        }
+      }
+    }
+    else {
+      commit('setShippingOptions', updatedShippingOptions);
     }
 
     commit('setLoading', false);
@@ -92,9 +139,7 @@ const actions = {
     if (product.inventory > 0) {
       const cartItem = state.items.find(item => item.id === product.id)
       if (!cartItem) {
-        if (product.inventory > 1) {
-          commit('pushProductToCart', { id: product.id })
-        }
+        commit('pushProductToCart', { id: product.id })
       } else {
         if (cartItem.quantity < product.inventory) {
           commit('incrementItemQuantity', { id: cartItem.id });
@@ -142,8 +187,11 @@ const actions = {
   setSelectedShippingDateOption({ commit }, { optionId, dateId }) {
     commit('setSelectedShippingDateOption', { optionId, dateId });
   },
-  setCartIsSync({ commit }, isInSync) {
-    commit('setCartIsSync', isInSync);
+  setIsCartSynced({ commit }, isCartSynced) {
+    commit('setIsCartSynced', isCartSynced);
+  },
+  setIsShippingSynced({ commit }, isShippingSynced) {
+    commit('setIsShippingSynced', isShippingSynced);
   },
   setIsInCheckout({ commit }, isInCheckout) {
     commit('setIsInCheckout', isInCheckout);
@@ -206,12 +254,16 @@ const mutations = {
     state.items = items;
   },
 
-  setCartIsSync(state, isInSync) {
-    state.isInSync = isInSync;
+  setIsCartSynced(state, isCartSynced) {
+    state.isCartSynced = isCartSynced;
+  },
+
+  setIsShippingSynced(state, isShippingSynced) {
+    state.isShippingSynced = isShippingSynced;
   },
 
   setIsInCheckout(state, isInCheckout) {
-    state.isInSync = isInCheckout;
+    state.isCartSynced = isInCheckout;
   },
 
   loadStoreFromLocalStorage(state) {

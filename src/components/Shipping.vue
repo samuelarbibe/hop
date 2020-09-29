@@ -10,33 +10,49 @@
             </span>
           </div>
           <div v-else-if="isError" class="notification is-danger">
-            <h1 class="title is-4">There was an error loading the shipping options.</h1>
+            <h1 class="title is-4">
+              There was an error loading the shipping options.
+            </h1>
             <h2 class="subtitle">Please try again later.</h2>
           </div>
-          <div v-else class="container">
+          <div v-else-if="selectedShippingOption != null" class="container">
             <div class="control is-size-4">
               <div v-for="option in shippingOptions" :key="option.id">
                 <button
                   dir="rtl"
                   @click="selectShippingOption(option.id)"
-                  :class="{'button option-button px-3':true, 'is-success':selectedShippingOption.id == option.id}"
+                  :class="{
+                    'button option-button px-3': true,
+                    'is-success': selectedShippingOption.id == option.id,
+                  }"
                 >
                   <span class="icon">
-                    <i v-if="selectedShippingOption.id == option.id" class="fas fa-dot-circle"></i>
+                    <i
+                      v-if="selectedShippingOption.id == option.id"
+                      class="fas fa-dot-circle"
+                    ></i>
                     <i v-else class="far fa-circle"></i>
                   </span>
-                  <span class="mr-3 is-size-5">{{option.title}}</span>
+                  <span class="mr-3 is-size-5">{{ option.title }}</span>
                 </button>
               </div>
             </div>
             <div class="notification container mt-5 mb-2" dir="rtl">
-              <h2 class="subtitle">{{selectedShippingOption.description}}</h2>
+              <h2 class="subtitle">{{ selectedShippingOption.description }}</h2>
             </div>
             <div class="my-5" dir="rtl">
-              <h1 v-if="selectedShippingOption.dates.length > 1" class="title is-4">בחר זמן משלוח</h1>
+              <h1
+                v-if="selectedShippingOption.dates.length > 1"
+                class="title is-4"
+              >
+                בחר זמן משלוח
+              </h1>
               <h1 v-else class="title is-4">זמן משלוח</h1>
             </div>
-            <div class="columns is-mobile" :key="selectedShippingOption.selectedShippingDate.id">
+            <div
+              class="columns is-mobile"
+              :key="selectedShippingOption.selectedShippingDate.id"
+            >
               <div
                 class="column"
                 v-for="date in selectedShippingOption.dates"
@@ -45,19 +61,46 @@
               >
                 <a @click="selectShippingDateOption(date.id)">
                   <div
-                    :class="{'notification date-button px-4': true, 'is-info': selectedShippingOption.selectedShippingDate.id == date.id}"
+                    :class="{
+                      'notification date-button px-4': true,
+                      'is-info':
+                        selectedShippingOption.selectedShippingDate.id ==
+                        date.id,
+                    }"
                   >
                     <p>
-                      {{new Date(date.from).toLocaleString('he-IL', {weekday: 'long'})}}
+                      {{
+                        new Date(date.from).toLocaleString("he-IL", {
+                          weekday: "long",
+                        })
+                      }}
                       בין
-                      {{new Date(date.from).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
+                      {{
+                        new Date(date.from).toLocaleTimeString([], {
+                          hour12: false,
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      }}
                       ל-
-                      {{new Date(date.to).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' })}}
+                      {{
+                        new Date(date.to).toLocaleTimeString([], {
+                          hour12: false,
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      }}
                     </p>
                   </div>
                 </a>
               </div>
             </div>
+          </div>
+          <div v-else class="notification is-danger">
+            <h1 class="title is-4">
+              There was an error loading the shipping options.
+            </h1>
+            <h2 class="subtitle">Please try again later.</h2>
           </div>
         </div>
       </div>
@@ -85,6 +128,11 @@ export default {
       isError: (state) => state.cart.isError,
     }),
   },
+  mounted() {
+    if (this.selectedShippingOption == null) {
+      this.selectShippingOption(this.shippingOptions[0].id);
+    }
+  },
   methods: {
     selectShippingOption(optionId) {
       this.$store.dispatch("cart/setSelectedShippingOption", optionId);
@@ -96,7 +144,6 @@ export default {
       });
     },
   },
-
 };
 </script>
 

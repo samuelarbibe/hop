@@ -75,12 +75,13 @@ exports.charge = functions.https.onRequest((req, res) => {
       let request = new paypal.orders.OrdersGetRequest(orderID);
 
       return client.execute(request).then((order) => {
-        console.log(`saving order ${order.result.id} in db...`);
+        console.log(`saving order ${order.result.id} in database...`);
 
         const ref = db.collection('orders');
         return ref.doc(order.result.id).set({
           ...order.result,
-          shipping : {
+          status: 'PAYED',
+          shipping: {
             id: shipping.id,
             name: shipping.name,
             title: shipping.title,
@@ -89,6 +90,10 @@ exports.charge = functions.https.onRequest((req, res) => {
           }
         }).then(() => {
           console.log(`order ${order.result.id} saved in database.`);
+          console.info(`order ${order.result.id} was successful.`);
+          return res.sendStatus(200);
+        }).catch((err) => {
+          console.error(`Error saving data in the DB: ${err}`);
           return res.sendStatus(200);
         });
       })
