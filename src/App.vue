@@ -40,6 +40,13 @@ export default {
 </script>
 
 <style scoped>
+.frame {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+</style>
+
+<style>
 /* Hide scrollbar for Chrome, Safari and Opera */
 body::-webkit-scrollbar {
   display: none;
@@ -51,8 +58,15 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
-.frame {
-  margin-top: 60px;
-  margin-bottom: 60px;
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
+h1 {
+  font-family: "Barlow Condensed";
+}
+
+p {
+  font-family: "Rubik";
 }
 </style>

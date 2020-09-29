@@ -1,9 +1,9 @@
 <template>
   <div class="container section">
     <div class="title has-text-centered">
-      <h2 class="is-size-2 has-text-white">The Tel-Aviv</h2>
+      <h2 class="is-size-3 has-text-white">The Tel-Aviv</h2>
       <h1 class="is-size-1 has-text-weight-semibold has-text-white py-4">House of Pasta</h1>
-      <button class="button shop-button is-large" v-scroll-to="'#productList'">
+      <button class="button shop-button is-large is-rounded" v-scroll-to="'#productList'">
         Order
       </button>
     </div>
@@ -30,5 +30,10 @@ export default {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
+}
+
+.shop-button {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 0;
 }
 </style>
