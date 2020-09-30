@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "deploy": "vue-cli-service build && firebase deploy",
+    "deploy-hosting": "vue-cli-service build && firebase deploy --only hosting",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "core-js": "^3.6.5",
     "firebase": "^7.21.0",
     "vue": "^2.6.11",
+    "vue-carousel": "^0.18.0",
     "vue-router": "^3.4.3",
     "vue-scrollto": "^2.18.2",
     "vue-sweetalert2": "^3.0.8",

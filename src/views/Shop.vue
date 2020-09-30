@@ -1,8 +1,10 @@
 <template>
   <div>
+    <div id="heroAnchor" />
     <Hero />
     <About />
-    <ProductList id="productList" />
+    <div id="productListAnchor" />
+    <ProductList />
     <InstagramGallery />
     <Contact />
     <Newsletter />
@@ -29,3 +31,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#productListAnchor {
+  display: block;
+  position: relative;
+  top: -60px;
+  visibility: hidden;
+}
+
+#heroAnchor {
+  display: block;
+  position: relative;
+  top: -60px;
+  visibility: hidden;
+}
+</style>

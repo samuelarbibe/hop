@@ -63,7 +63,7 @@ body {
 @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
 h1 {
-  font-family: "Barlow Condensed";
+  font-family: "Barlow Condensed", "Rubik";
 }
 
 p {

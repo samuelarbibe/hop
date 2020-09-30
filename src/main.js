@@ -6,6 +6,7 @@ import router from './router'
 import VueToast from 'vue-toast-notification';
 import VueScrollTo from 'vue-scrollto';
 import VueSweetalert2 from 'vue-sweetalert2';
+import VueCarousel from 'vue-carousel';
 import 'vue-toast-notification/dist/theme-default.css';
 import "firebase/analytics";
 import 'bulma/css/bulma.min.css';
@@ -35,6 +36,7 @@ Vue.prototype.$analytics = firebase.analytics();
 Vue.use(VueToast);
 Vue.use(VueScrollTo);
 Vue.use(VueSweetalert2);
+Vue.use(VueCarousel);
 
 new Vue({
   store,

@@ -1,61 +1,90 @@
 <template>
   <div
-    :class="{'px-0 mx-0':true, 'is-product-in-cart': isInCart, 'is-selected': isSelected && !isInCart}"
+    :class="{
+      'px-0 mx-0': true,
+      'is-product-in-cart': isInCart,
+      'is-selected': isSelected && !isInCart,
+    }"
+
   >
     <a
-      v-if="!isSelected"
-      class="product-listing has-text-black	 columns is-mobile has-text-left my-0 mx-0"
+      v-show="!isSelected"
+      class="product-listing has-text-black columns is-mobile has-text-left my-0 mx-0"
       @click="select()"
     >
       <div class="column product-info">
-        <p class="is-size-5-mobile is-size-4-desktop">{{product.name}}</p>
-        <p class="is-size-6-mobile is-size-5-desktop" dir="rtl">{{product.description}}</p>
+        <p class="is-size-5-mobile is-size-4-desktop">{{ product.name }}</p>
+        <p class="is-size-6-mobile is-size-5-desktop" dir="rtl">
+          {{ product.description }}
+        </p>
         <div class="bottom-content">
           <div class="columns is-mobile">
             <div class="column">
-              <span v-if="isInCart" class="is-size-6-mobile is-size-5-desktop">{{product.price * quantity}} ₪</span>
-              <span v-else class="is-size-6-mobile is-size-5-desktop">{{product.price}} ₪</span>
+              <span v-if="isInCart" class="is-size-6-mobile is-size-5-desktop"
+                >{{ product.price * quantity }} ₪</span
+              >
+              <span v-else class="is-size-6-mobile is-size-5-desktop"
+                >{{ product.price }} ₪</span
+              >
             </div>
             <div v-if="!isInStock" class="column has-text-right">
-              <span class="has-text-danger is-size-6-mobile is-size-5-desktop">לא במלאי</span>
+              <span class="has-text-danger is-size-6-mobile is-size-5-desktop"
+                >לא במלאי</span
+              >
             </div>
-            <div v-else-if="isInCart" class="column has-text-right has-text-info mr-2">
-              <b class="is-size-5-mobile is-size-4-desktop">X{{quantity}}</b>
+            <div
+              v-else-if="isInCart"
+              class="column has-text-right has-text-info mr-2"
+            >
+              <b class="is-size-5-mobile is-size-4-desktop">X{{ quantity }}</b>
             </div>
           </div>
         </div>
       </div>
       <div class="column is-one-third-mobile">
         <figure class="image is-1x1">
-          <img :src="product.image" alt="Placeholder image" />
+          <img :src="product.images[0]" :alt="`${product.name} Thumbnail`" />
         </figure>
       </div>
     </a>
-    <div v-else class="product-details">
-      <a class="column is-full-mobile px-0 py-0" @click="unselect()">
-        <figure class="image is-square">
-          <img :src="product.image" alt="Placeholder image" />
+    <div v-show="isSelected" class="product-details">
+      <a class="column is-full-mobile px-0 py-0">
+        <div class="container">
+          <carousel :per-page="1">
+            <slide class="slide" v-for="image in product.images" :key="image">
+              <img class="slide-image" :src="image" alt="Placeholder image" />
+            </slide>
+          </carousel>
           <button class="button is-rounded close-button" @click="unselect()">
             <div class="icon is-large">
               <i class="fas fa-times fa-lg"></i>
             </div>
           </button>
-        </figure>
+        </div>
       </a>
       <div class="column product-info mx-3">
-        <h1 class="title is-3">{{product.name}}</h1>
-        <h2 class="subtitle is-4" dir="rtl">{{product.description}}</h2>
+        <h1 class="title is-3">{{ product.name }}</h1>
+        <h2 class="subtitle is-4" dir="rtl">{{ product.description }}</h2>
         <div class="bottom-content">
           <div class="columns is-mobile">
             <div class="column">
-              <span v-if="isInCart" class="is-size-5-mobile is-size-4-desktop">{{product.price * quantity}} ₪</span>
-              <span v-else class="is-size-5-mobile is-size-4-desktop">{{product.price}} ₪</span>
+              <span v-if="isInCart" class="is-size-5-mobile is-size-4-desktop"
+                >{{ product.price * quantity }} ₪</span
+              >
+              <span v-else class="is-size-5-mobile is-size-4-desktop"
+                >{{ product.price }} ₪</span
+              >
             </div>
             <div v-if="!isInStock" class="column has-text-right">
-              <span class="has-text-danger is-size-6-mobile is-size-5-desktop">לא במלאי</span>
+              <span class="has-text-danger is-size-6-mobile is-size-5-desktop"
+                >לא במלאי</span
+              >
             </div>
-            <div v-else-if="isInCart" class="column has-text-right has-text-info mr-2">
-              <b class="is-size-5-mobile is-size-4-desktop">X{{quantity}}</b>
+            <div
+              v-else-if="isInCart"
+              class="column has-text-right has-text-info mr-2"
+            >
+              <b class="is-size-5-mobile is-size-4-desktop">X{{ quantity }}</b>
             </div>
           </div>
         </div>
@@ -64,7 +93,7 @@
         <div class="columns is-mobile">
           <div class="column is-size-5">
             <span>Amount:</span>
-            <b class="pl-2">{{quantity}}</b>
+            <b class="pl-2">{{ quantity }}</b>
           </div>
           <div class="column is-narrow">
             <div v-if="isInCart" class="field has-addons">
@@ -96,7 +125,9 @@
               class="button add-button is-info buy-button"
               :disabled="!canAddToCart"
               @click="addToCart(product)"
-            >Add to Cart</button>
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
       </div>
@@ -114,6 +145,7 @@ export default {
       isSelected: false,
     };
   },
+  components: {},
   computed: {
     isInCart() {
       return this.quantity > 0;
@@ -139,7 +171,7 @@ export default {
   },
   methods: {
     select() {
-      this.$emit('select');
+      this.$emit("select");
       this.isSelected = true;
     },
     unselect() {
@@ -167,12 +199,12 @@ export default {
 </script>
 
 <style scoped>
+
 .product-listing {
   background-color: transparent;
   border: 0;
   margin: 0px;
 }
-
 
 .close-button {
   width: 0px;

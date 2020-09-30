@@ -11,7 +11,7 @@
     </div>
     <div v-else class="">
       <h1 class="title is-3 mx-4 my-5">Menu</h1>
-      <div class="columns mx-0 my-0 is-multiline">
+      <div class="columns mx-0 my-0 is-multiline" id="productList">
         <div
           class="column px-0 is-one-third is-narrow"
           v-for="product in pastaProducts"
@@ -73,4 +73,5 @@ export default {
 .loading {
   text-align: center;
 }
+
 </style>

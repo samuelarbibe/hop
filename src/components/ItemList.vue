@@ -13,7 +13,7 @@
       <tbody>
         <tr v-for="product in cartProducts" :key="product.id">
           <td>
-            <img class="image is-128x128" :src="product.image" :alt="product.name" />
+            <img class="image is-128x128" :src="product.images[0]" :alt="product.name" />
           </td>
           <td>
             <div class="columns">
