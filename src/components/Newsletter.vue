@@ -7,7 +7,7 @@
     </div>
     <div id="newsletter-input-container" class="container has-text-centered">
       <p class="section-subtitle">Get notified about new products</p>
-      <div class="columns is-mobile" >
+      <div class="columns" >
         <div class="column">
           <input
             type="text"
@@ -93,6 +93,6 @@ export default {
 
 #newsletter-input-container {
   margin: 0 auto;
-  width: 600px;
+  max-width: 600px;
 }
 </style>

@@ -41,8 +41,8 @@ export default {
 
 <style scoped>
 .frame {
-  margin-top: 60px;
-  margin-bottom: 60px;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 </style>
 
@@ -80,7 +80,7 @@ p {
 
 .section-title {
   font-size: 40px;
-  margin: 20px 0px;
+  margin: 0 0 20px 0;
   font-family: "Bungee";
 }
 
