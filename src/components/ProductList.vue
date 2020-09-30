@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container section px-0">
     <div v-if="isLoading" class="loading has-text-centered">
       <span class="is-1 icon is-large">
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
@@ -10,7 +10,11 @@
       <h2 class="subtitle">Please try again later.</h2>
     </div>
     <div v-else class="">
-      <h1 class="title is-3 mx-4 my-5">Menu</h1>
+      <div class="container section">
+        <div class="title has-text-centered">
+          <h2 class="section-title">Menu</h2>
+        </div>
+      </div>
       <div class="columns mx-0 my-0 is-multiline" id="productList">
         <div
           class="column px-0 is-one-third is-narrow"
@@ -74,4 +78,9 @@ export default {
   text-align: center;
 }
 
+.header {
+  font-size: 40px;
+  margin: 20px 0px 20px 0px;
+  font-family: 'Bungee';
+}
 </style>

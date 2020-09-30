@@ -1,16 +1,27 @@
 <template>
   <div class="container section">
-    <h1 class="title is-3">Newsletter</h1>
-    <p class="subtitle">Get notified about new products</p>
-    <div class="columns is-desktop">
-      <div class="column">
-        <input type="text" class="input" placeholder="Email" v-model="email" />
+    <div class="container section">
+      <div class="title has-text-centered">
+        <h2 class="section-title">Newsletter</h2>
       </div>
-      <div v-if="notValid" class="mx-3 has-text-danger">
-        <span>Invalid Email</span>
-      </div>
-      <div class="column">
-        <button class="button is-dark" @click="subscribe()">Subscribe</button>
+    </div>
+    <div id="newsletter-input-container" class="container has-text-centered">
+      <p class="section-subtitle">Get notified about new products</p>
+      <div class="columns is-mobile" >
+        <div class="column">
+          <input
+            type="text"
+            class="input"
+            placeholder="Email"
+            v-model="email"
+          />
+        </div>
+        <div v-if="notValid" class="mx-3 has-text-danger">
+          <span>Invalid Email</span>
+        </div>
+        <div class="column is-narrow">
+          <button class="button is-dark" @click="subscribe()">Subscribe</button>
+        </div>
       </div>
     </div>
   </div>
@@ -78,5 +89,10 @@ export default {
 <style scoped>
 .button {
   width: 100%;
+}
+
+#newsletter-input-container {
+  margin: 0 auto;
+  width: 600px;
 }
 </style>

@@ -69,4 +69,24 @@ h1 {
 p {
   font-family: "Rubik";
 }
+
+.section-button {
+  background-color: rgba(247, 247, 247, 1) !important;
+  color: rgb(100, 100, 100) !important;
+  font-weight: bold !important;
+  font-size: 25px !important;
+  border: 0 !important;
+}
+
+.section-title {
+  font-size: 40px;
+  margin: 20px 0px;
+  font-family: "Bungee";
+}
+
+.section-subtitle {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0 0 40px 0px !important;
+}
 </style>
