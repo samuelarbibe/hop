@@ -1,17 +1,17 @@
 <template>
   <div class="container section">
-    <h1 class="title is-3 shipping-header">Checkout</h1>
+    <h2 class="title is-3 shipping-header">Checkout</h2>
     <div v-if="isLoading" class="notification is-info has-text-centered" dir="rtl">
-      <h1 class="title is-4">מעבדים את התשלום...</h1>
+      <h2 class="title is-4">מעבדים את התשלום...</h2>
       <span class="is-1 icon is-large">
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
       </span>
     </div>
     <div v-else-if="isError" class="notification is-danger" dir="rtl">
-      <h1 class="title is-4">התשלום לא התבצע.</h1>
+      <h2 class="title is-4">התשלום לא התבצע.</h2>
     </div>
     <div v-else-if="isSuccess" class="notification is-success" dir="rtl">
-      <h1 class="title is-4">התשלום התבצע בהצלחה!</h1>
+      <h2 class="title is-4">התשלום התבצע בהצלחה!</h2>
     </div>
     <div v-show="!isLoading && !isError && !isSuccess" class="columns mx-0">
       <div class="column">

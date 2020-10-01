@@ -5,7 +5,7 @@
     </span>
   </div>
   <div v-else-if="isError" class="notification is-danger">
-    <h1 class="title is-4">There was an error loading the shipping options.</h1>
+    <h2 class="title is-4">There was an error loading the shipping options.</h2>
     <h2 class="subtitle">Please try again later.</h2>
   </div>
   <div v-else class="container">
@@ -68,26 +68,26 @@
     </table>
     <div class="level is-mobile">
       <div class="level-left">
-        <h1 class="subtitle is-4">Subtotal</h1>
+        <h2 class="subtitle is-4">Subtotal</h2>
       </div>
       <div class="right">
-        <h1 class="subtitle is-4">{{cartSubtotalPrice}} ₪</h1>
+        <h2 class="subtitle is-4">{{cartSubtotalPrice}} ₪</h2>
       </div>
     </div>
     <div class="level is-mobile">
       <div class="level-left">
-        <h1 class="subtitle is-4">Shipping</h1>
+        <h2 class="subtitle is-4">Shipping</h2>
       </div>
       <div class="right">
-        <h1 class="subtitle is-4">{{cartShippingPrice}} ₪</h1>
+        <h2 class="subtitle is-4">{{cartShippingPrice}} ₪</h2>
       </div>
     </div>
     <div  class="level is-mobile">
       <div class="level-left">
-        <h1 class="title is-3">Total</h1>
+        <h2 class="title is-3">Total</h2>
       </div>
       <div class="right">
-        <h1 class="title is-3">{{cartTotalPrice}} ₪</h1>
+        <h2 class="title is-3">{{cartTotalPrice}} ₪</h2>
       </div>
     </div>
   </div>

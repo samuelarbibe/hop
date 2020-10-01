@@ -60,14 +60,18 @@ body {
 
 @import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Dosis&display=swap');
+/* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap"); */
 h1 {
-  font-family: "Barlow Condensed", "Rubik";
+  font-size: 40px;
+  margin: 0 0 20px 0;
+  font-family: "Dosis";
+  font-weight: 600;
 }
 
 p {
-  font-family: "Rubik";
+  /* font-family: "Rubik"; */
 }
 
 .section-button {
@@ -76,12 +80,6 @@ p {
   font-weight: bold !important;
   font-size: 25px !important;
   border: 0 !important;
-}
-
-.section-title {
-  font-size: 40px;
-  margin: 0 0 20px 0;
-  font-family: "Bungee";
 }
 
 .section-subtitle {

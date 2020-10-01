@@ -2,7 +2,7 @@
   <div class="container section">
     <div class="container section">
       <div class="title has-text-centered">
-        <h2 class="section-title">Gallery</h2>
+        <h1>Gallery</h1>
       </div>
     </div>
     <div class="container has-text-centered">
@@ -22,9 +22,9 @@
       </span>
     </div>
     <div v-else-if="isError" class="notification">
-      <h1 class="title is-4">
+      <h2 class="title is-4">
         There was an error loading the instagram images.
-      </h1>
+      </h2>
     </div>
     <div v-else class="container columns is-multiline is-mobile mt-6">
       <div

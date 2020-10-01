@@ -5,7 +5,7 @@
         <i class="fas fa-info-circle fa-lg"></i>
       </span>
     </div>
-    <h1 class="title is-3">שינוי במשלוח</h1>
+    <h2 class="title is-3">שינוי במשלוח</h2>
     <p class="subtitle is-size-5">המשלוח שבחרת עודכן על ידי בעל החנות. חזור כדי לבחור אותו שוב</p>
     <button class="button is-info" @click="setSynced()">עבור למשלוח</button>
   </div>

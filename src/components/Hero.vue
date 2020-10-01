@@ -12,9 +12,16 @@
         </button>
       </div>
       <div class="column">
-        <transition name="fade">
-          <img v-show="loaded" :src="selectedImage" alt="" />
-        </transition>
+        <div class="pic">
+          <transition name="img" v-for="(item, index) in images" :key="item">
+            <img
+              v-show="index === mark"
+              :src="item"
+              @mouseenter="stop"
+              @mouseleave="play"
+            />
+          </transition>
+        </div>
       </div>
     </div>
   </div>
@@ -26,24 +33,40 @@ export default {
   data() {
     return {
       loaded: false,
-      src: [
+      images: [
         "https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2Fbalanzoni_png?alt=media&token=45fce120-0af9-406a-9558-e7b031aed71e",
         "https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2Ffreccia_png?alt=media&token=16ac13cd-ba6e-4adf-a088-f809e712617c",
         "https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2Fmezzaluna_png?alt=media&token=8599a001-4e92-4a44-8865-86f1c6bbac66",
+        "https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2Ftortelli_png?alt=media&token=0d117bad-0876-4db0-bd7d-a4b1be06ec40",
       ],
-      selectedImage: "",
+      mark: 0,
+      timer: "",
     };
   },
   methods: {
-    onLoaded() {
-      this.selectedImage = this.src[
-        Math.floor(Math.random() * this.src.length)
-      ];
+    autoplay() {
+      if (this.mark < this.images.length - 1) {
+        this.mark++;
+      } else {
+        this.mark = 0;
+      }
+    },
+    play() {
+      this.timer = setInterval(this.autoplay, 8000);
+    },
+    change(num) {
+      this.mark = num;
+    },
+    stop() {
+      clearInterval(this.timer);
+      this.timer = null;
     },
   },
-  mounted() {
-    this.selectedImage = this.src[Math.floor(Math.random() * this.src.length)];
-    this.loaded = true;
+  created() {
+    this.play();
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
   },
 };
 </script>
@@ -51,7 +74,6 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  /* max-height: 600px; */
   /* background-image: url("https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2FIMG_6314.jpg?alt=media&token=e7e6496d-01e6-41cc-a840-1032424804b2"); */
   background-size: 100%;
 }
@@ -71,21 +93,49 @@ export default {
   font-size: 60px !important;
 }
 
+.pic {
+  display: grid;
+  grid-template: 1fr/1fr;
+}
+
+.piv > div {
+  grid-area: 1 / 1;
+}
+
 img {
-  /* -webkit-filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.2)); */
+  grid-area: 1 / 1;
   filter: drop-shadow(-20px 20px 10px rgba(93, 68, 68, 0.2));
+  transition: transform 1s;
 }
 
-.fade-enter-active {
+img:hover {
+  transform: scale(1.05);
+}
+
+.img-enter-active,
+.img-leave-active {
+  /* animation: zoom-in 3s; */
   transition: opacity 0.5s ease-in-out;
-  transition-delay: 1s;
 }
 
-.fade-enter-to {
+.img-enter,
+.img-leave-to {
+  opacity: 0;
+}
+
+.img-enter-to,
+.img-leave {
   opacity: 1;
 }
 
-.fade-enter {
-  opacity: 0;
+@keyframes zoom-in {
+  0% {
+    /* opacity: 0; */
+    transform: scale(0.9);
+  }
+  100% {
+    /* opacity: 1; */
+    transform: scale(1);
+  }
 }
 </style>

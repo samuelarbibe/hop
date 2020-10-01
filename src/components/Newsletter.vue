@@ -2,7 +2,7 @@
   <div class="container section">
     <div class="container section">
       <div class="title has-text-centered">
-        <h2 class="section-title">Newsletter</h2>
+        <h1>Newsletter</h1>
       </div>
     </div>
     <div id="newsletter-input-container" class="container has-text-centered">

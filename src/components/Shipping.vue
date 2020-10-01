@@ -1,6 +1,6 @@
 <template>
   <div class="container section">
-    <h1 class="title is-3 shipping-header">Shipping</h1>
+    <h2 class="title is-3 shipping-header">Shipping</h2>
     <div class="columns mx-0">
       <div class="column">
         <div class="container">
@@ -10,9 +10,9 @@
             </span>
           </div>
           <div v-else-if="isError" class="notification is-danger">
-            <h1 class="title is-4">
+            <h2 class="title is-4">
               There was an error loading the shipping options.
-            </h1>
+            </h2>
             <h2 class="subtitle">Please try again later.</h2>
           </div>
           <div v-else-if="selectedShippingOption != null" class="container">
@@ -41,13 +41,13 @@
               <h2 class="subtitle">{{ selectedShippingOption.description }}</h2>
             </div>
             <div class="my-5" dir="rtl">
-              <h1
+              <h2
                 v-if="selectedShippingOption.dates.length > 1"
                 class="title is-4"
               >
                 בחר זמן משלוח
-              </h1>
-              <h1 v-else class="title is-4">זמן משלוח</h1>
+              </h2>
+              <h2 v-else class="title is-4">זמן משלוח</h2>
             </div>
             <div
               class="columns is-mobile"
@@ -97,9 +97,9 @@
             </div>
           </div>
           <div v-else class="notification is-danger">
-            <h1 class="title is-4">
+            <h2 class="title is-4">
               There was an error loading the shipping options.
-            </h1>
+            </h2>
             <h2 class="subtitle">Please try again later.</h2>
           </div>
         </div>
