@@ -68,8 +68,9 @@ export default {
       this.isLoading = true;
     },
     setSuccess() {
-      this.$store.dispatch("cart/setIsCartLocked", true);
+      // TODO: check user getting inventory change message after ordering last item
       this.$store.dispatch("cart/emptyCart");
+      this.$store.dispatch("cart/setIsCartLocked", false);
       this.isError = false;
       this.isLoading = false;
       this.isSuccess = true;

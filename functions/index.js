@@ -77,8 +77,12 @@ exports.charge = functions.https.onRequest((req, res) => {
       return client.execute(request).then((order) => {
         console.log(`saving order ${order.result.id} in database...`);
 
-        const ref = db.collection('orders');
-        return ref.doc(order.result.id).set({
+        const batch = db.batch();
+        
+        console.log(`saving order...`);
+        // Save order in db
+        const orderRef = db.collection('orders').doc(order.result.id);
+        const orderData = {
           ...order.result,
           status: 'PAYED',
           shipping: {
@@ -88,7 +92,27 @@ exports.charge = functions.https.onRequest((req, res) => {
             type: shipping.type,
             date: shipping.selectedShippingDate,
           }
-        }).then(() => {
+        };
+
+        batch.set(orderRef, orderData);
+
+        // Decrement items inventory
+        order.result.purchase_units[0].items.forEach((item) => {
+          console.log(`updating inventory for item ${item.sku}...`);
+          const itemRef = db.collection('products').doc(item.sku);
+          const quantity = Number(item.quantity);
+          const decrement = admin.firestore.FieldValue.increment(-1 * quantity);
+
+          batch.update(itemRef, { inventory: decrement });
+        });
+        
+        console.log(`updating shipping inventory...`);
+        // Decrement shipping inventory
+        const shippingRef = db.collection('shipping').doc(shipping.id);
+        const decrement = admin.firestore.FieldValue.increment(-1);
+        batch.update(shippingRef, { inventory: decrement });
+
+        return batch.commit().then(() => {
           console.log(`order ${order.result.id} saved in database.`);
           console.info(`order ${order.result.id} was successful.`);
           return res.sendStatus(200);
