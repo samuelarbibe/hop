@@ -29,7 +29,7 @@ export default {
     setApproved() {
       this.$emit("success");
     },
-    getRequestBody() {
+    createOrderDetails() {
       return {
         intent: "CAPTURE",
         application_context: {
@@ -82,34 +82,38 @@ export default {
     },
   },
   mounted() {
-    const requestBodyRef = this.getRequestBody;
-    const processingRef = this.setProccesing;
-    const approvedRef = this.setApproved;
-    const errorRef = this.setError;
-    const shippingRef = this.selectedShippingOption;
+    const self = this;
+    let lockedOrderDetails = null;
+    let lockedShippingOption = null;
 
     paypal
       .Buttons({
         onClick: () => {
-          // TODO implement
-          // create request body
-          // remove all items from stock
+          // set cart status to locked
+          self.$store.dispatch("cart/setIsCartLocked", true);
+          lockedOrderDetails = self.createOrderDetails();
+          lockedShippingOption = self.selectedShippingOption;
         },
-        createOrder: () => checkout.order(requestBodyRef(), errorRef),
+        createOrder: () => checkout.order(lockedOrderDetails, self.setError),
         onApprove: (data, actions) => {
-          processingRef();
+          self.setProccesing();
           const chargingData = {
             orderID: data.orderID,
-            shipping: shippingRef,
+            shipping: lockedShippingOption,
           };
-          return checkout.charge(chargingData, actions, approvedRef, errorRef);
+          return checkout.charge(
+            chargingData,
+            actions,
+            self.setApproved,
+            self.setError
+          );
         },
         onShippingChange: (data, actions) =>
           checkout.checkShippingAddress(data, actions),
-        onCancle: () => {
-          // TODO implement
+        onError: (err) => self.setError(),
+        onCancel: () => {
+          self.$store.dispatch("cart/setIsCartLocked", false);
         },
-        onError: (err) => errorRef(),
       })
       .render("#paypal-button-container");
   },

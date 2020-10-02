@@ -8,7 +8,7 @@ const state = () => ({
   isLoading: false,
   isCartSynced: true,
   isShippingSynced: true,
-  isInCheckout: false,
+  isCartLocked: false,
 })
 
 const getters = {
@@ -193,8 +193,8 @@ const actions = {
   setIsShippingSynced({ commit }, isShippingSynced) {
     commit('setIsShippingSynced', isShippingSynced);
   },
-  setIsInCheckout({ commit }, isInCheckout) {
-    commit('setIsInCheckout', isInCheckout);
+  setIsCartLocked({ commit }, isCartLocked) {
+    commit('setIsCartLocked', isCartLocked);
   }
 }
 
@@ -262,8 +262,8 @@ const mutations = {
     state.isShippingSynced = isShippingSynced;
   },
 
-  setIsInCheckout(state, isInCheckout) {
-    state.isCartSynced = isInCheckout;
+  setIsCartLocked(state, isCartLocked) {
+    state.isCartLocked = isCartLocked;
   },
 
   loadStoreFromLocalStorage(state) {

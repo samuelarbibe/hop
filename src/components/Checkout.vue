@@ -1,7 +1,11 @@
 <template>
   <div class="container section">
     <h2 class="title is-3 shipping-header">Checkout</h2>
-    <div v-if="isLoading" class="notification is-info has-text-centered" dir="rtl">
+    <div
+      v-if="isLoading"
+      class="notification is-info has-text-centered"
+      dir="rtl"
+    >
       <h2 class="title is-4">מעבדים את התשלום...</h2>
       <span class="is-1 icon is-large">
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
@@ -17,12 +21,16 @@
       <div class="column">
         <div class="container">
           <div class="notification container my-5">
-            <h2
-              class="subtitle"
-              dir="rtl"
-            >התשלום מתבצע באמצעות פייפל, וישנה האפשרות לשלם באמצעות חשבון PayPal או באמצעות כרטיס אשראי.</h2>
+            <h2 class="subtitle" dir="rtl">
+              התשלום מתבצע באמצעות פייפל, וישנה האפשרות לשלם באמצעות חשבון
+              PayPal או באמצעות כרטיס אשראי.
+            </h2>
           </div>
-          <PayPalCheckout @loading="setLoading()" @success="setSuccess()" @error="setError()" />
+          <PayPalCheckout
+            @loading="setLoading()"
+            @success="setSuccess()"
+            @error="setError()"
+          />
         </div>
       </div>
       <div class="column is-hidden-mobile">
@@ -51,15 +59,16 @@ export default {
   },
   methods: {
     setError() {
+      this.$store.dispatch("cart/setIsCartLocked", false);
       this.isLoading = false;
       this.isError = true;
     },
     setLoading() {
-      // this.$store.dispatch("cart/setIsInCheckout", true);
       this.isError = false;
       this.isLoading = true;
     },
     setSuccess() {
+      this.$store.dispatch("cart/setIsCartLocked", true);
       this.$store.dispatch("cart/emptyCart");
       this.isError = false;
       this.isLoading = false;

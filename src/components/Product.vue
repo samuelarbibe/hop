@@ -11,7 +11,7 @@
       :class="{
         'column image-container': true,
         'is-one-third-mobile': !isSelected,
-        'no-padding-x-mobile': isSelected,
+        'no-padding-x-mobile image-container-desktop': isSelected,
       }"
     >
       <figure class="image is-1x1">
@@ -176,9 +176,12 @@ export default {
   margin: 0px;
 }
 
-.image-container {
+.image-container-desktop {
   width: 100%;
-  transition: width 0.3s, padding 0.3s ease-out;
+}
+
+.image-container {
+  transition: width 0.3s, padding 0.3s ease-in-out;
 }
 
 a {
@@ -190,9 +193,6 @@ a {
     flex-direction: row;
     display: flex;
   }
-}
-
-@media (max-width: 768px) {
   .no-padding-x-mobile {
     padding-right: 0px;
     padding-left: 0px;

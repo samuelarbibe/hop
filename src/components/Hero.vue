@@ -3,7 +3,7 @@
     <div class="columns">
       <div class="column title-container">
         <h2 class="subheader">The Tel-Aviv</h2>
-        <h1 class="section-title header">House of Pasta</h1>
+        <h1 class="header">House of Pasta</h1>
         <button
           class="button section-button is-large is-rounded"
           v-scroll-to="'#productListAnchor'"
@@ -11,7 +11,7 @@
           Order Now
         </button>
       </div>
-      <div class="column">
+      <div class="column is-hidden-mobile">
         <div class="pic">
           <transition name="img" v-for="(item, index) in images" :key="item">
             <img

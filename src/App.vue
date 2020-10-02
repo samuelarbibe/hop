@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Navbar />
-    <CartNotSyncDialog v-if="!this.isCartSynced" />
-    <ShippingNotSyncDialog v-if="!this.isShippingSynced" />
+    <CartNotSyncDialog v-if="!this.isCartLocked && !this.isCartSynced" />
+    <ShippingNotSyncDialog v-if="!this.isCartLocked && !this.isShippingSynced" />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
@@ -33,6 +33,7 @@ export default {
     ...mapState({
       cartItems: (state) => state.cart.items,
       isCartSynced: (state) => state.cart.isCartSynced,
+      isCartLocked: (state) => state.cart.isCartLocked,
       isShippingSynced: (state) => state.cart.isShippingSynced,
     }),
   },
@@ -62,11 +63,12 @@ body {
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Dosis&display=swap');
 /* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
-/* @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Barlow&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
 h1 {
   font-size: 40px;
-  margin: 0 0 20px 0;
-  font-family: "Dosis";
+  margin: 0 0 40px 0 !important;
+  font-family: "Barlow";
   font-weight: 600;
 }
 

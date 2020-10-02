@@ -48,7 +48,7 @@ const actions = {
             }
         });
         if (invalidCartQuantity) {
-            commit('cart/setCartIsSync', false, {root: true});
+            commit('cart/setIsCartSynced', false, {root: true});
         }
         console.log('products updated');
         commit('setProducts', updatedProducts);
