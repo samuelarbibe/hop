@@ -7,7 +7,7 @@
     </div>
     <div id="newsletter-input-container" class="container has-text-centered">
       <p class="section-subtitle">Get notified about new products</p>
-      <div class="columns" >
+      <div class="columns">
         <div class="column">
           <input
             type="text"
@@ -48,7 +48,9 @@ export default {
       if (this.isValid) {
         this.notValid = false;
         const toastRef = this.$toast;
-        shop.subscribeToNewsletter(this.email.toLowerCase(), {
+        
+        shop.subscribeToNewsletter({
+          email: this.email.toLowerCase(),
           successCb() {
             toastRef.open({
               message: "הרשמה הוצלחה",

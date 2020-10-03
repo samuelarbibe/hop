@@ -24,10 +24,9 @@ const actions = {
         commit('setError', false);
         commit('setLoading', true);
 
-        const unsubscribe = shop.updateProducts({
+        const unsubscribe = shop.subscribeToProducts({
             updateCb: (updatedProducts) => dispatch('onUpdate', updatedProducts),
             errorCb: (err) => dispatch('onUpdateErr', err),
-            finallyCb: () => dispatch('afterUpdate'),
         }
         );
 

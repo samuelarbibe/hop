@@ -20,10 +20,9 @@ const actions = {
         commit('setError', false);
         commit('setLoading', true);
 
-        shop.updateShopStatus({
+        shop.subscribeToShopStatus({
             updateCb: (status) => dispatch('onUpdate', status),
             errorCb: (err) => dispatch('onUpdateErr', err),
-            finallyCb: () => dispatch('afterUpdate'),
         }
         );
     },

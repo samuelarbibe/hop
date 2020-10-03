@@ -3,7 +3,7 @@ import 'firebase/firebase-firestore';
 import 'firebase/firebase-functions';
 
 export default {
-    updateShopStatus({ updateCb, errorCb, finallyCb }) {
+    subscribeToShopStatus({ updateCb, errorCb }) {
         const db = firebase.firestore();
         const statusRef = db.collection("statuses").where("name", "==", "shop");
 
@@ -17,10 +17,10 @@ export default {
                 errorCb('no shop status found');
             }
 
-        }, errorCb, finallyCb)
+        }, errorCb)
     },
 
-    updateProducts({ updateCb, errorCb, finallyCb }) {
+    subscribeToProducts({ updateCb, errorCb }) {
         const db = firebase.firestore();
         const productsRef = db.collection("products").where("inventory", ">", 0);
 
@@ -32,7 +32,7 @@ export default {
                 updatedProducts.push(product);
             });
             updateCb(updatedProducts);
-        }, errorCb, finallyCb)
+        }, errorCb);
     },
 
     updateShippingOptions({ updateShippingCb, errorCb }) {
@@ -50,7 +50,7 @@ export default {
         }, errorCb);
     },
 
-    subscribeToNewsletter(email, { successCb, usedEmailCb, errorCb }) {
+    subscribeToNewsletter({ email, successCb, usedEmailCb, errorCb }) {
         const db = firebase.firestore();
         const subsRef = db.collection("subscribers");
 

@@ -94,19 +94,23 @@ export default {
           lockedOrderDetails = self.createOrderDetails();
           lockedShippingOption = self.selectedShippingOption;
         },
-        createOrder: () => checkout.order(lockedOrderDetails, self.setError),
-        onApprove: (data, actions) => {
+        createOrder: () =>
+          checkout.order({
+            orderDetails: lockedOrderDetails,
+            errorCb: self.setError,
+          }),
+        onApprove: (data) => {
           self.setProccesing();
           const chargingData = {
             orderID: data.orderID,
             shipping: lockedShippingOption,
           };
-          return checkout.charge(
-            chargingData,
-            actions,
-            self.setApproved,
-            self.setError
-          );
+          
+          return checkout.charge({
+            chargingData: chargingData,
+            successCb: self.setApproved,
+            errorCb: self.setError,
+          });
         },
         onShippingChange: (data, actions) =>
           checkout.checkShippingAddress(data, actions),
