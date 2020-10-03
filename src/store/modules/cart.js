@@ -9,6 +9,7 @@ const state = () => ({
   isCartSynced: true,
   isShippingSynced: true,
   isCartLocked: false,
+  unsubscribe: null,
 })
 
 const getters = {
@@ -52,10 +53,21 @@ const actions = {
     commit('setError', false);
     commit('setLoading', true);
 
-    shop.updateShippingOptions({
+    const unsubscribe = shop.updateShippingOptions({
       updateShippingCb: (updatedShippingOptions) => dispatch('onShippingUpdate', updatedShippingOptions),
       errorCb: (err) => dispatch('onUpdateErr', err),
     });
+
+    commit('setUnsubscribe', unsubscribe);
+  },
+
+  unloadShippingOptions({ commit, state, dispatch }) {
+    if (state.unsubscribe != null) {
+      console.log('unsubscribed from shipping options');
+      state.unsubscribe();
+      dispatch('emptyCart');
+      commit('setShippingOptions', []);
+    }
   },
 
   onUpdateErr({ commit }, err) {
@@ -264,6 +276,10 @@ const mutations = {
 
   setIsCartLocked(state, isCartLocked) {
     state.isCartLocked = isCartLocked;
+  },
+
+  setUnsubscribe(state, unsubscribe) {
+    state.unsubscribe = unsubscribe;
   },
 
   loadStoreFromLocalStorage(state) {

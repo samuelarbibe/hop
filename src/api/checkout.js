@@ -10,10 +10,10 @@ export default {
             },
             body: JSON.stringify(data),
         })
-            .then(function (res) {
+            .then((res) => {
                 return res.json();
             })
-            .then(function (data) {
+            .then((data) => {
                 return data.orderID;
             }).catch((err) => {
                 console.error(err);
@@ -28,8 +28,11 @@ export default {
             },
             body: JSON.stringify(data),
         })
-            .then(() => {
-                successCb();
+            .then((res) => {
+                return res.json();
+            })
+            .then((data) => {
+                successCb(data);
             })
             .catch((err) => {
                 console.error(err);

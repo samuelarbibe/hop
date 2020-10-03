@@ -78,7 +78,7 @@ exports.charge = functions.https.onRequest((req, res) => {
         console.log(`saving order ${order.result.id} in database...`);
 
         const batch = db.batch();
-        
+
         console.log(`saving order...`);
         // Save order in db
         const orderRef = db.collection('orders').doc(order.result.id);
@@ -105,7 +105,7 @@ exports.charge = functions.https.onRequest((req, res) => {
 
           batch.update(itemRef, { inventory: decrement });
         });
-        
+
         console.log(`updating shipping inventory...`);
         // Decrement shipping inventory
         const shippingRef = db.collection('shipping').doc(shipping.id);
@@ -115,9 +115,11 @@ exports.charge = functions.https.onRequest((req, res) => {
         return batch.commit().then(() => {
           console.log(`order ${order.result.id} saved in database.`);
           console.info(`order ${order.result.id} was successful.`);
-          return res.sendStatus(200);
+
+          return res.status(200).json(order.result.payer);
         }).catch((err) => {
           console.error(`Error saving data in the DB: ${err}`);
+
           return res.sendStatus(200);
         });
       })

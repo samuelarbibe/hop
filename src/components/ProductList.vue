@@ -1,11 +1,17 @@
 <template>
   <div class="container section px-0">
-    <div v-if="isLoading" class="loading has-text-centered">
+    <div
+      v-if="isProductsLoading || isStatusLoading"
+      class="loading has-text-centered"
+    >
       <span class="is-1 icon is-large">
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
       </span>
     </div>
-    <div v-else-if="isError" class="notification is-danger">
+    <div
+      v-else-if="isProductsError || isStatusError"
+      class="notification is-danger"
+    >
       <h2 class="title is-4">There was an error loading the site</h2>
       <h2 class="subtitle">Please try again later.</h2>
     </div>
@@ -15,7 +21,10 @@
           <h1>Menu</h1>
         </div>
       </div>
-      <div class="columns mx-0 my-0 is-multiline">
+      <div v-if="!isShopOpen" class="has-text-centered">
+        <p class="section-subtitle">We Are Closed!</p>
+      </div>
+      <div v-else class="columns mx-0 my-0 is-multiline">
         <div
           class="column px-0 is-one-third"
           v-for="product in products"
@@ -34,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import Product from "./Product";
 
 export default {
@@ -50,10 +59,13 @@ export default {
   },
   computed: {
     ...mapState({
+      isStatusLoading: (state) => state.shop.isLoading,
+      isStatusError: (state) => state.shop.isError,
       products: (state) => state.products.all,
-      isLoading: (state) => state.products.isLoading,
-      isError: (state) => state.products.isError,
+      isProductsLoading: (state) => state.products.isLoading,
+      isProductsError: (state) => state.products.isError,
     }),
+    ...mapGetters("shop", ["isShopOpen"]),
     // ...mapGetters("products", ["pastaProducts", "otherProducts"]),
   },
   methods: {

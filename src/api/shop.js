@@ -3,11 +3,28 @@ import 'firebase/firebase-firestore';
 import 'firebase/firebase-functions';
 
 export default {
+    updateShopStatus({ updateCb, errorCb, finallyCb }) {
+        const db = firebase.firestore();
+        const statusRef = db.collection("statuses").where("name", "==", "shop");
+
+        return statusRef.onSnapshot((snapshot) => {
+            if (!snapshot.empty) {
+                const doc = snapshot.docs[0];
+                let status = doc.data();
+                status.id = doc.id;
+                updateCb(status);
+            } else {
+                errorCb('no shop status found');
+            }
+
+        }, errorCb, finallyCb)
+    },
+
     updateProducts({ updateCb, errorCb, finallyCb }) {
         const db = firebase.firestore();
         const productsRef = db.collection("products").where("inventory", ">", 0);
 
-        productsRef.onSnapshot((snapshot) => {
+        return productsRef.onSnapshot((snapshot) => {
             let updatedProducts = [];
             snapshot.forEach((doc) => {
                 let product = doc.data();
@@ -22,7 +39,7 @@ export default {
         const db = firebase.firestore();
         const shippingRef = db.collection("shipping").where("inventory", ">", 0);
 
-        shippingRef.onSnapshot((snapshot) => {
+        return shippingRef.onSnapshot((snapshot) => {
             let updatedShippingOptions = [];
             snapshot.forEach((doc) => {
                 let option = doc.data();
@@ -37,7 +54,7 @@ export default {
         const db = firebase.firestore();
         const subsRef = db.collection("subscribers");
 
-        subsRef.where("email", "==", email).get().then((snapshot) => {
+        return subsRef.where("email", "==", email).get().then((snapshot) => {
             if (!snapshot.empty) {
                 usedEmailCb();
             } else {

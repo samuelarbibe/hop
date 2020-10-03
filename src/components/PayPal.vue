@@ -26,8 +26,8 @@ export default {
     setProccesing() {
       this.$emit("loading");
     },
-    setApproved() {
-      this.$emit("success");
+    setApproved(payer) {
+      this.$emit("success", payer);
     },
     createOrderDetails() {
       return {

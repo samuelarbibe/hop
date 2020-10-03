@@ -2,14 +2,16 @@
   <div id="app">
     <Navbar />
     <CartNotSyncDialog v-if="!this.isCartLocked && !this.isCartSynced" />
-    <ShippingNotSyncDialog v-if="!this.isCartLocked && !this.isShippingSynced" />
+    <ShippingNotSyncDialog
+      v-else-if="!this.isCartLocked && !this.isShippingSynced"
+    />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
@@ -26,16 +28,35 @@ export default {
   },
   created() {
     // this.$store.dispatch("cart/initStore");
-    this.$store.dispatch("cart/loadShippingOptions");
-    this.$store.dispatch("products/getAllProducts");
+    this.$store.dispatch("shop/loadShopStatus");
   },
   computed: {
     ...mapState({
+      shopStatus: (state) => state.shop.status,
       cartItems: (state) => state.cart.items,
       isCartSynced: (state) => state.cart.isCartSynced,
       isCartLocked: (state) => state.cart.isCartLocked,
       isShippingSynced: (state) => state.cart.isShippingSynced,
     }),
+    ...mapGetters("shop", ["isShopOpen"]),
+  },
+  watch: {
+    shopStatus: {
+      handler() {
+        if (this.shopStatus != null) {
+          if (this.isShopOpen) {
+            this.$store.dispatch("cart/loadShippingOptions");
+            this.$store.dispatch("products/loadProducts");
+          } else {
+            this.$store.dispatch("cart/unloadShippingOptions");
+            this.$store.dispatch("products/unloadProducts");
+            if (!this.isCartLocked) {
+              this.$router.push({ name: "shop" }).catch(() => {});
+            }
+          }
+        }
+      },
+    },
   },
 };
 </script>
@@ -61,7 +82,7 @@ body {
 
 @import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Dosis&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dosis&display=swap");
 /* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Barlow&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");

@@ -16,6 +16,15 @@
     </div>
     <div v-else-if="isSuccess" class="notification is-success" dir="rtl">
       <h2 class="title is-4">התשלום התבצע בהצלחה!</h2>
+      <p class="is-size-4-desktop">
+        <span>תודה רבה על הקניה </span>
+        <span>{{ payer.name.given_name }}.</span>
+      </p>
+      <br>
+      <p class="is-size-4-desktop">
+        <span>כל הפרטים על הקניה נשלחו ל-</span>
+        <a>{{ payer.email_address }}</a>
+      </p>
     </div>
     <div v-show="!isLoading && !isError && !isSuccess" class="columns mx-0">
       <div class="column">
@@ -27,9 +36,9 @@
             </h2>
           </div>
           <PayPalCheckout
-            @loading="setLoading()"
-            @success="setSuccess()"
-            @error="setError()"
+            @loading="setLoading"
+            @success="setSuccess"
+            @error="setError"
           />
         </div>
       </div>
@@ -55,6 +64,12 @@ export default {
       isLoading: false,
       isError: false,
       isSuccess: false,
+      payer: {
+        name: {
+          given_name: "samuel",
+        },
+        email_address: "samuel.arbibe@gmail.com",
+      },
     };
   },
   methods: {
@@ -67,10 +82,11 @@ export default {
       this.isError = false;
       this.isLoading = true;
     },
-    setSuccess() {
+    setSuccess(payer) {
       // TODO: check user getting inventory change message after ordering last item
       this.$store.dispatch("cart/emptyCart");
-      this.$store.dispatch("cart/setIsCartLocked", false);
+      // this.$store.dispatch("cart/setIsCartLocked", false);
+      this.payer = payer;
       this.isError = false;
       this.isLoading = false;
       this.isSuccess = true;
