@@ -1,8 +1,6 @@
 <template>
   <div id="paypal-button-container"></div>
 </template>
-<script
-    src="https://www.paypal.com/sdk/js?client-id=AfmG4QqEw-HCpIVoa0onYWSoeZAtRgXIPoe4_HNF1g_PGrG1PXkC_i8zQZYBFryvVdrL2XNU2kezJJ8l&currency=ILS"></script>
 <script>
 import { mapState, mapGetters } from "vuex";
 import checkout from "../api/checkout";
@@ -86,6 +84,7 @@ export default {
     let lockedOrderDetails = null;
     let lockedShippingOption = null;
 
+    // eslint-disable-next-line no-undef
     paypal
       .Buttons({
         onClick: () => {
@@ -105,7 +104,7 @@ export default {
             orderID: data.orderID,
             shipping: lockedShippingOption,
           };
-          
+
           return checkout.charge({
             chargingData: chargingData,
             successCb: self.setApproved,
@@ -114,7 +113,7 @@ export default {
         },
         onShippingChange: (data, actions) =>
           checkout.checkShippingAddress(data, actions),
-        onError: (err) => self.setError(),
+        onError: () => self.setError(),
         onCancel: () => {
           self.$store.dispatch("cart/setIsCartLocked", false);
         },

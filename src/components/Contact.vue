@@ -7,7 +7,7 @@
     </div>
     <div class="container has-text-centered">
       <a
-        class="button section-button is-large is-rounded"
+        class="button section-button is-large is-rounded whatsapp-button"
       >
         <span class="icon is-large">
           <i class="fab fa-whatsapp fa-lg"></i>

@@ -11,7 +11,10 @@ const paypal = require('@paypal/checkout-server-sdk');
 let clientId = functions.config().paypal.client_id;
 let clientSecret = functions.config().paypal.client_secret;
 // This sample uses SandboxEnvironment. In production, use LiveEnvironment
-let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+let environment = (process.env.FUNCTIONS_EMULATOR === 'true')
+  ? new paypal.core.SandboxEnvironment(clientId, clientSecret)
+  : new paypal.core.LiveEnvironment(clientId, clientSecret);
+
 let client = new paypal.core.PayPalHttpClient(environment);
 
 exports.order = functions.https.onRequest((req, res) => {

@@ -105,6 +105,11 @@ p {
   border: 0 !important;
 }
 
+.whatsapp-button {
+  background-color: hsl(141, 53%, 53%) !important;
+  color:white !important;
+}
+
 .section-subtitle {
   font-size: 25px;
   font-weight: bold;
