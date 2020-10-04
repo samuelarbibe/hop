@@ -78,13 +78,6 @@ const actions = {
   onShippingUpdate({ state, commit }, updatedShippingOptions) {
     console.log('shipping options updated');
 
-    updatedShippingOptions = updatedShippingOptions.map(updatedShippingOption => {
-      return {
-        ...updatedShippingOption,
-        selectedShippingDate: updatedShippingOption.dates[0],
-      }
-    });
-
     if (state.selectedShippingOption != null) {
       commit('setShippingOptions', updatedShippingOptions);
 
@@ -106,40 +99,10 @@ const actions = {
           console.log('selected option changed');
           commit('setSelectedShippingOption', updatedSelectedShippingOption.id);
         }
-
-        const currentSelectedShippingDate = state.selectedShippingOption.selectedShippingDate;
-        const updatedSelectedDate = updatedSelectedShippingOption.dates.find(date => date.id === currentSelectedShippingDate.id);
-
-        // If selected date option no longer exists
-        if (updatedSelectedDate === undefined) {
-          commit('setIsShippingSynced', false);
-          console.log('selected date no longer exists');
-
-          commit('setSelectedShippingDateOption',
-            {
-              optionId: updatedSelectedShippingOption.id,
-              dateId: updatedSelectedShippingOption.dates[0].id
-            });
-
-          // If selected date has changed
-        } else if (
-          updatedSelectedDate.from !== currentSelectedShippingDate.from ||
-          updatedSelectedDate.to !== currentSelectedShippingDate.to
-        ) {
-          commit('setIsShippingSynced', false);
-          console.log('selected date changed');
-          commit('setSelectedShippingDateOption',
-            {
-              optionId: updatedSelectedShippingOption.id,
-              dateId: updatedSelectedDate.id
-            });
-        }
       }
     }
-    else {
-      commit('setShippingOptions', updatedShippingOptions);
-    }
 
+    commit('setShippingOptions', updatedShippingOptions);
     commit('setLoading', false);
   },
 
@@ -196,9 +159,6 @@ const actions = {
   setSelectedShippingOption({ commit }, selectedOptionId) {
     commit('setSelectedShippingOption', selectedOptionId);
   },
-  setSelectedShippingDateOption({ commit }, { optionId, dateId }) {
-    commit('setSelectedShippingDateOption', { optionId, dateId });
-  },
   setIsCartSynced({ commit }, isCartSynced) {
     commit('setIsCartSynced', isCartSynced);
   },
@@ -226,14 +186,6 @@ const mutations = {
 
   setSelectedShippingOption(state, selectedOptionId) {
     state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
-  },
-
-  setSelectedShippingDateOption(state, { optionId, dateId }) {
-    let option = state.shippingOptions.find(option => option.id === optionId);
-    let selectedDate = option.dates.find(date => date.id === dateId);
-    option.selectedShippingDate = selectedDate;
-    state.selectedShippingOption = null;
-    state.selectedShippingOption = option;
   },
 
   pushProductToCart(state, { id }) {
