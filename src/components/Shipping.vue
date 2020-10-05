@@ -1,6 +1,6 @@
 <template>
   <div class="container section">
-    <h2 class="title is-3 shipping-header">Shipping</h2>
+    <h2 class="title is-3 shipping-header mt-4">Shipping</h2>
     <div class="columns mx-0">
       <div class="column">
         <div class="container">

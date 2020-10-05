@@ -1,6 +1,6 @@
 <template>
   <div class="container section">
-    <h2 class="title is-3 shipping-header">Checkout</h2>
+    <h2 class="title is-3 shipping-header mt-4">Checkout</h2>
     <div
       v-if="isLoading"
       class="notification is-info has-text-centered"

@@ -93,7 +93,7 @@ exports.charge = functions.https.onRequest((req, res) => {
             name: shipping.name,
             title: shipping.title,
             type: shipping.type,
-            date: shipping.selectedShippingDate,
+            date: shipping.date,
           }
         };
 
