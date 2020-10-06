@@ -22,7 +22,8 @@
         </div>
       </div>
       <div v-if="!isShopOpen" class="has-text-centered">
-        <p class="section-subtitle">We Are Closed!</p>
+        <h1 class="title">{{status.title}}</h1>
+        <p class="is-size-4">{{status.text}}</p>
       </div>
       <div v-else class="columns mx-0 my-0 is-multiline">
         <div
@@ -59,6 +60,7 @@ export default {
   },
   computed: {
     ...mapState({
+      status: (state) => state.shop.status,
       isStatusLoading: (state) => state.shop.isLoading,
       isStatusError: (state) => state.shop.isError,
       products: (state) => state.products.all,
@@ -77,14 +79,9 @@ export default {
 </script>
 
 <style scoped>
+
 .loading {
   text-align: center;
-}
-
-.header {
-  font-size: 40px;
-  margin: 20px 0px 20px 0px;
-  font-family: "Bungee";
 }
 
 .product-anchor {
