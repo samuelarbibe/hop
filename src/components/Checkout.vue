@@ -1,32 +1,23 @@
 <template>
   <div class="container section">
     <h2 class="title is-3 shipping-header mt-4">Checkout</h2>
-    <div
-      v-if="isLoading"
-      class="notification is-info has-text-centered"
-      dir="rtl"
-    >
-      <h2 class="title is-4">מעבדים את התשלום...</h2>
-      <span class="is-1 icon is-large">
-        <i class="fas fa-spinner fa-pulse fa-lg"></i>
-      </span>
-    </div>
+    <LoadingPopup v-if="isLoading" />
     <div v-else-if="isError" class="notification is-danger" dir="rtl">
-      <h2 class="title is-4">התשלום לא התבצע.</h2>
+      <h2 class="title is-4">הייתה בעיה בביצוע התשלום.</h2>
     </div>
     <div v-else-if="isSuccess" class="notification is-success" dir="rtl">
       <h2 class="title is-4">התשלום התבצע בהצלחה!</h2>
       <p class="is-size-4-desktop">
         <span>תודה רבה על הקניה </span>
-        <span>{{ payer.name.given_name }}.</span>
+        <span>{{ details.payer.name.given_name }}.</span>
       </p>
-      <br>
+      <br />
       <p class="is-size-4-desktop">
         <span>כל הפרטים על הקניה נשלחו ל-</span>
-        <a>{{ payer.email_address }}</a>
+        <a>{{ details.payer.email_address }}</a>
       </p>
     </div>
-    <div v-show="!isLoading && !isError && !isSuccess" class="columns mx-0">
+    <div v-show="!isError && !isSuccess" class="columns mx-0">
       <div class="column">
         <div class="container">
           <div class="notification container my-5">
@@ -50,6 +41,7 @@
 </template>
 
 <script>
+import LoadingPopup from "./LoadingPopup";
 import PayPalCheckout from "./PayPal";
 import ItemList from "./ItemList";
 
@@ -58,17 +50,20 @@ export default {
   components: {
     PayPalCheckout,
     ItemList,
+    LoadingPopup,
   },
   data() {
     return {
       isLoading: false,
       isError: false,
       isSuccess: false,
-      payer: {
-        name: {
-          given_name: "samuel",
+      details: {
+        payer: {
+          name: {
+            given_name: "samuel",
+          },
+          email_address: "samuel.arbibe@gmail.com",
         },
-        email_address: "samuel.arbibe@gmail.com",
       },
     };
   },
@@ -77,16 +72,19 @@ export default {
       this.$store.dispatch("cart/setIsCartLocked", false);
       this.isLoading = false;
       this.isError = true;
+      this.$swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
     },
     setLoading() {
       this.isError = false;
       this.isLoading = true;
     },
-    setSuccess(payer) {
-      // TODO: check user getting inventory change message after ordering last item
+    setSuccess(details) {
       this.$store.dispatch("cart/emptyCart");
-      // this.$store.dispatch("cart/setIsCartLocked", false);
-      this.payer = payer;
+      this.details = details;
       this.isError = false;
       this.isLoading = false;
       this.isSuccess = true;
@@ -96,4 +94,7 @@ export default {
 </script>
 
 <style scoped>
+.is-loading {
+  max-width: 500px;
+}
 </style>

@@ -67,24 +67,43 @@ exports.charge = functions.https.onRequest((req, res) => {
     console.log(`order ${req.body.orderID} approved. capturing order...`);
 
     const orderID = req.body.orderID;
-    const shipping = req.body.shipping;
 
-    const request = new paypal.orders.OrdersCaptureRequest(orderID);
-    request.requestBody({});
+    const captureRequest = new paypal.orders.OrdersCaptureRequest(orderID);
+    captureRequest.requestBody({});
 
-    return client.execute(request).then((capture) => {
+    return client.execute(captureRequest).then((capture) => {
       console.log(`order ${capture.result.id} captured.`);
 
-      let request = new paypal.orders.OrdersGetRequest(orderID);
+      return res.status(200).json(capture.result);
+    }).catch((err) => {
+      console.error(`Error saving in payment: ${err}`);
 
-      return client.execute(request).then((order) => {
-        console.log(`saving order ${order.result.id} in database...`);
+      return res.sendStatus(500);
+    });
+  });
+});
 
-        const batch = db.batch();
+exports.updateStock = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
 
-        console.log(`saving order...`);
-        // Save order in db
-        const orderRef = db.collection('orders').doc(order.result.id);
+    const orderID = req.body.orderID;
+    const shipping = req.body.shipping;
+
+    let request = new paypal.orders.OrdersGetRequest(orderID);
+
+    return client.execute(request).then((order) => {
+      console.log(`saving order ${order.result.id} in database...`);
+
+      const batch = db.batch();
+
+      console.log(`saving order...`);
+      const orderRef = db.collection('orders').doc(order.result.id);
+
+      return orderRef.get().then((doc) => {
+        if (doc.exists) {
+          throw Error('order already registered.');
+        }
+
         const orderData = {
           ...order.result,
           status: 'PAYED',
@@ -99,7 +118,6 @@ exports.charge = functions.https.onRequest((req, res) => {
 
         batch.set(orderRef, orderData);
 
-        // Decrement items inventory
         order.result.purchase_units[0].items.forEach((item) => {
           console.log(`updating inventory for item ${item.sku}...`);
           const itemRef = db.collection('products').doc(item.sku);
@@ -110,25 +128,30 @@ exports.charge = functions.https.onRequest((req, res) => {
         });
 
         console.log(`updating shipping inventory...`);
-        // Decrement shipping inventory
         const shippingRef = db.collection('shipping').doc(shipping.id);
         const decrement = admin.firestore.FieldValue.increment(-1);
+
         batch.update(shippingRef, { inventory: decrement });
 
         return batch.commit().then(() => {
           console.log(`order ${order.result.id} saved in database.`);
           console.info(`order ${order.result.id} was successful.`);
 
-          return res.status(200).json(order.result.payer);
+          return res.sendStatus(200);
         }).catch((err) => {
           console.error(`Error saving data in the DB: ${err}`);
 
-          return res.sendStatus(200);
+          return res.status(500).send(`Error saving data in the DB: ${err}`);
         });
-      })
+      }).catch((err) => {
+        console.error(`Could not save order in DB: ${err}`);
+
+        return res.status(500).send(`Could not save order in DB: ${err}`);
+      });
     }).catch((err) => {
-      console.error(err);
-      return res.sendStatus(500);
+      console.error(`Error fetching order data from paypal: ${err}`);
+
+      return res.status(500).send(`Error fetching order data from paypal: ${err}`);
     });
   });
 });

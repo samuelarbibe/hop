@@ -24,20 +24,14 @@ export default {
     setProccesing() {
       this.$emit("loading");
     },
-    setApproved(payer) {
-      this.$emit("success", payer);
+    setSuccess(details) {
+      this.$emit("success", details);
     },
     createOrderDetails() {
       return {
         intent: "CAPTURE",
         application_context: {
-          return_url:
-            window.location.origin +
-            this.$router.resolve({ name: "shop" }).href,
-          cancel_url:
-            window.location.origin +
-            this.$router.resolve({ name: "checkout" }).href,
-          brand_name: "HoP TLV",
+          brand_name: "HOP TLV",
           locale: "he-IL",
           landing_page: "BILLING",
           shipping_preference:
@@ -45,6 +39,14 @@ export default {
               ? "NO_SHIPPING"
               : "GET_FROM_FILE",
           user_action: "CONTINUE",
+        },
+        redirect_urls: {
+          return_url:
+            window.location.origin +
+            this.$router.resolve({ name: "process" }).href,
+          cancel_url:
+            window.location.origin +
+            this.$router.resolve({ name: "checkout" }).href,
         },
         purchase_units: [
           {
@@ -88,7 +90,6 @@ export default {
     paypal
       .Buttons({
         onClick: () => {
-          // set cart status to locked
           self.$store.dispatch("cart/setIsCartLocked", true);
           lockedOrderDetails = self.createOrderDetails();
           lockedShippingOption = self.selectedShippingOption;
@@ -107,7 +108,7 @@ export default {
 
           return checkout.charge({
             chargingData: chargingData,
-            successCb: self.setApproved,
+            successCb: self.setSuccess,
             errorCb: self.setError,
           });
         },

@@ -3,7 +3,7 @@
     <div id="heroAnchor" />
     <Hero />
     <!-- <div id="background-section-1" /> -->
-    <About />
+    <About id="about" />
     <div id="productListAnchor" />
     <div id="background-section-1">
       <ProductList />
@@ -38,6 +38,10 @@ export default {
 </script>
 
 <style scoped>
+#about {
+  /* max-width: 800px; */
+}
+
 #productListAnchor {
   display: block;
   position: relative;

@@ -108,6 +108,8 @@ const actions = {
 
   emptyCart({ commit }) {
     commit('setCartItems', { items: [] });
+    commit('setIsCartSynced', true);
+    commit('setIsCartLocked', false);
   },
 
   addProductToCart({ state, commit }, product) {

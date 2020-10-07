@@ -51,7 +51,7 @@ export default {
             this.$store.dispatch("cart/unloadShippingOptions");
             this.$store.dispatch("products/unloadProducts");
             if (!this.isCartLocked) {
-              this.$router.push({ name: "shop" }).catch(() => {});
+              // this.$router.push({ name: "shop" }).catch(() => {});
             }
           }
         }
