@@ -27,10 +27,10 @@ const router = new VueRouter({
             path: '/checkout',
             name: 'checkout',
             component: Checkout,
-            // beforeEnter: (to, from, next) => {
-            //     if (from.name != 'shipping') next({ name: 'shipping' });
-            //     else next()
-            // }
+            beforeEnter: (to, from, next) => {
+                if (from.name != 'shipping') next({ name: 'shipping' });
+                else next()
+            }
         },
     ]
 });

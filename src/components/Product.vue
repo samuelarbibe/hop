@@ -3,7 +3,7 @@
     dir="rtl"
     :class="{
       'columns product-container my-0': true,
-      'is-row-reverse-mobile': !isSelected,
+      'is-row-reverse-mobile product-container-mobile': !isSelected,
     }"
   >
     <a
@@ -27,8 +27,15 @@
       </figure>
     </a>
     <a @click="click()" class="column product-info" dir="ltr">
-      <p class="is-size-5-mobile is-size-4-desktop">{{ product.name }}</p>
-      <p class="is-size-6-mobile is-size-5-desktop" dir="rtl">
+      <p
+        class="is-size-6-mobile is-size-4-desktop has-text-black-ter has-text-weight-semibold"
+      >
+        {{ product.name }}
+      </p>
+      <p
+        class="is-size-6-mobile is-size-5-desktop has-text-grey-dark"
+        dir="rtl"
+      >
         {{ product.description }}
       </p>
       <div class="columns is-mobile">
@@ -105,7 +112,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "product",
-  props: ["product"],
+  props: ["product", "height"],
   data() {
     return {
       isSelected: false,
@@ -138,9 +145,9 @@ export default {
   methods: {
     click() {
       this.isSelected ? this.unselect() : this.select();
+      this.$emit("select");
     },
     select() {
-      this.$emit("select");
       this.isSelected = true;
     },
     unselect() {
@@ -184,6 +191,20 @@ export default {
   transition: width 0.3s, padding 0.3s ease-in-out;
 }
 
+.product-container {
+  transition: height 0.2s ease-in-out;
+}
+
+.image {
+  height: 100%;
+}
+
+.image img {
+  height: 100%;
+  object-fit: contain;
+  object-position: right;
+}
+
 a {
   color: black;
 }
@@ -196,6 +217,9 @@ a {
   .no-padding-x-mobile {
     padding-right: 0px;
     padding-left: 0px;
+  }
+  .product-container-mobile {
+    height: 150px;
   }
 }
 

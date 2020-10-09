@@ -44,7 +44,7 @@ const getters = {
   },
 
   cartTotalPrice: (state, getters) => {
-    return getters.cartSubtotalPrice + getters.cartShippingPrice;
+    return (getters.cartSubtotalPrice + getters.cartShippingPrice).toFixed(2);
   }
 }
 
@@ -108,7 +108,9 @@ const actions = {
 
   emptyCart({ commit }) {
     commit('setCartItems', { items: [] });
+    commit('setSelectedShippingOption', null);
     commit('setIsCartSynced', true);
+    commit('setIsShippingSynced', true);
     commit('setIsCartLocked', false);
   },
 
@@ -187,7 +189,11 @@ const mutations = {
   },
 
   setSelectedShippingOption(state, selectedOptionId) {
-    state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
+    if (selectedOptionId === null) {
+      state.selectedShippingOption = null;
+    } else {
+      state.selectedShippingOption = state.shippingOptions.find(options => options.id === selectedOptionId);
+    }
   },
 
   pushProductToCart(state, { id }) {

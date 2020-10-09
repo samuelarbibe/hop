@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 <template>
   <div class="container section px-0">
     <div
@@ -22,20 +23,21 @@
         </div>
       </div>
       <div v-if="!isShopOpen" class="has-text-centered">
-        <h1 class="title">{{status.title}}</h1>
-        <p class="is-size-4">{{status.text}}</p>
+        <h1 class="title">{{ status.title }}</h1>
+        <p class="is-size-4">{{ status.text }}</p>
       </div>
       <div v-else class="columns mx-0 my-0 is-multiline">
+        <div class="product-anchor" id="firstItemAnchor" />
         <div
-          class="column px-0 is-one-third"
-          v-for="product in products"
-          :key="product.id"
+          class="column px-0 is-one-third py-0"
+          v-for="(product, index) in products"
+          :key="index"
         >
-          <div class="product-anchor" :id="product.name.replace(' ', '')" />
           <product
             ref="products"
             :product="product"
-            @select="unslectOtherProducts"
+            :height="productMobileHeight"
+            @select="scrollToSelected(product)"
           />
         </div>
       </div>
@@ -56,6 +58,7 @@ export default {
     return {
       selectedProduct: null,
       showPastaInfo: false,
+      productMobileHeight: 150,
     };
   },
   computed: {
@@ -68,23 +71,46 @@ export default {
       isProductsError: (state) => state.products.isError,
     }),
     ...mapGetters("shop", ["isShopOpen"]),
-    // ...mapGetters("products", ["pastaProducts", "otherProducts"]),
+    ...mapGetters("products", ["pastaProducts", "otherProducts"]),
   },
   methods: {
-    unslectOtherProducts() {
-      this.$refs.products.forEach((product) => product.unselect());
+    unslectOtherProducts(selectedProduct) {
+      this.$refs.products
+        .filter((product) => product.product.id !== selectedProduct.id)
+        .forEach((product) => product.unselect());
+    },
+    scrollToSelected(selectedProduct) {
+      this.unslectOtherProducts(selectedProduct);
+
+      const selectedIndex = this.$refs.products.findIndex(
+        (product) => product.product.id === selectedProduct.id
+      );
+      if (window.innerWidth < 769) {
+        let offset = 12;
+
+        offset += selectedIndex * this.productMobileHeight;
+
+        if (!this.$refs.products[selectedIndex].isSelected) {
+          offset -= 200;
+        }
+
+        this.$scrollTo(`#firstItemAnchor`, 300, {
+          offset: offset,
+          easing: "ease",
+        });
+        this.selectedProduct = selectedProduct;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-
 .loading {
   text-align: center;
 }
 
-.product-anchor {
+#firstItemAnchor {
   display: block;
   position: relative;
   top: -60px;

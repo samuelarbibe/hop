@@ -35,6 +35,7 @@ export default {
                     throw Error(res.statusText);
                 }
                 this.updateStock(chargingData);
+                
                 return res.json();
             }).then((details) => {
                 successCb(details);

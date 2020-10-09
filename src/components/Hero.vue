@@ -91,6 +91,7 @@ export default {
 
 .header {
   font-size: 60px !important;
+  line-height: 1;
 }
 
 .pic {

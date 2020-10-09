@@ -18,13 +18,13 @@ export default {
     }),
   },
   methods: {
-    setError() {
+    onError() {
       this.$emit("error");
     },
-    setProccesing() {
+    onLoading() {
       this.$emit("loading");
     },
-    setSuccess(details) {
+    onSuccess(details) {
       this.$emit("success", details);
     },
     createOrderDetails() {
@@ -97,10 +97,10 @@ export default {
         createOrder: () =>
           checkout.order({
             orderDetails: lockedOrderDetails,
-            errorCb: self.setError,
+            errorCb: self.onError,
           }),
         onApprove: (data) => {
-          self.setProccesing();
+          self.onLoading();
           const chargingData = {
             orderID: data.orderID,
             shipping: lockedShippingOption,
@@ -108,13 +108,13 @@ export default {
 
           return checkout.charge({
             chargingData: chargingData,
-            successCb: self.setSuccess,
-            errorCb: self.setError,
+            successCb: self.onSuccess,
+            errorCb: self.onError,
           });
         },
         onShippingChange: (data, actions) =>
           checkout.checkShippingAddress(data, actions),
-        onError: () => self.setError(),
+        onError: () => self.onError(),
         onCancel: () => {
           self.$store.dispatch("cart/setIsCartLocked", false);
         },
