@@ -7,6 +7,7 @@
     </div>
     <div class="container has-text-centered">
       <a
+      href="https://wa.link/ywkq0q"
         class="button section-button is-large is-rounded whatsapp-button"
       >
         <span class="icon is-large">

@@ -134,7 +134,7 @@
             </div>
             <div class="container" dir="rtl">
               <span> יש לכם שאלות? </span>
-              <a>דברו איתנו באווטסאפ</a>
+              <a href="https://wa.link/ywkq0q">דברו איתנו באווטסאפ</a>
             </div>
           </div>
           <div v-else class="notification is-danger">

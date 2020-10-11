@@ -59,7 +59,7 @@ export default {
 #background-section-1 {
   margin-top: -220px;
   padding-top: 200px;
-  background-color: rgb(246, 246, 246);
+  /* background-color: rgb(246, 246, 246); */
 }
 
 #background-section-2 {

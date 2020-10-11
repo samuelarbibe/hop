@@ -65,7 +65,7 @@
       dir="ltr"
     >
       <div class="columns is-mobile">
-        <div class="column is-size-5">
+        <div class="column is-size-6">
           <span>Amount:</span>
           <b class="pl-2">{{ quantity }}</b>
         </div>
@@ -179,8 +179,8 @@ export default {
   background-color: transparent;
   flex-direction: column;
   height: 100%;
-  border: 0;
   margin: 0px;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.15);
 }
 
 .image-container-desktop {
@@ -199,10 +199,11 @@ export default {
   height: 100%;
 }
 
-.image img {
+.image > img {
   height: 100%;
   object-fit: contain;
   object-position: right;
+  /* border-radius: 5px;  */
 }
 
 a {

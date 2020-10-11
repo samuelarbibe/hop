@@ -36,7 +36,7 @@ export default {
 }
 
 .text-container {
-  padding: 30px;
+  /* padding: 30px; */
   text-align: center;
 }
 </style>
