@@ -1,11 +1,11 @@
 <template>
-  <div class="container section">
+  <div class="container section outer-container">
     <div class="columns columns-is-mobile">
       <div class="column title-container">
         <h2 class="subheader">The Tel-Aviv</h2>
         <h1 class="header">House of Pasta</h1>
         <button
-          class="button section-button is-large is-rounded"
+          class="button section-button is-rounded"
           v-scroll-to="'#productListAnchor'"
         >
           Order Now
@@ -113,7 +113,6 @@ img:hover {
   transform: scale(1.05);
 }
 
-
 .img-enter-active,
 .img-leave-active {
   /* animation: zoom-in 3s; */
@@ -142,12 +141,20 @@ img:hover {
 }
 
 @media (max-width: 768px) {
+  .outer-container {
+    background-image: url("https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2FIMG_6314.jpg?alt=media&token=e7e6496d-01e6-41cc-a840-1032424804b2");
+  }
   .columns-is-mobile {
     color: white;
   }
   .title-container {
+    padding: 100px 0px;
     align-items: center;
     text-align: center;
+  }
+  .header {
+    font-weight: bold;
+    font-size: 45px !important;
   }
   .button {
     background-color: rgba(255, 255, 255, 0.7) !important;

@@ -104,6 +104,11 @@ p {
   font-size: 25px !important;
   border: 0 !important;
 }
+@media (max-width: 768px) {
+  .section-button {
+    font-size: 20px !important;
+  }
+}
 
 .whatsapp-button {
   background-color: hsl(141, 53%, 53%) !important;

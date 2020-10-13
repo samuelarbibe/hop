@@ -35,6 +35,16 @@ export default {
   font-size: 30px !important;
 }
 
+@media (max-width: 768px) {
+  #about {
+    padding: 0px;
+  }
+  .about-container {
+    box-shadow: none;
+    border-radius: 0px;
+  }
+}
+
 .text-container {
   /* padding: 30px; */
   text-align: center;
