@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <Navbar />
-    <CartNotSyncDialog v-if="!this.isCartLocked && !this.isCartSynced" />
     <ShippingNotSyncDialog
-      v-else-if="!this.isCartLocked && !this.isShippingSynced"
+      v-if="!this.isCartLocked && !this.isShippingSynced"
     />
+    <CartNotSyncDialog v-else-if="!this.isCartLocked && !this.isCartSynced" />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
@@ -107,7 +107,7 @@ p {
 
 .whatsapp-button {
   background-color: hsl(141, 53%, 53%) !important;
-  color:white !important;
+  color: white !important;
 }
 
 .section-subtitle {

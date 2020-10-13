@@ -1,9 +1,15 @@
 <template>
   <div>
     <div id="heroAnchor" />
-    <Hero />
-    <!-- <div id="background-section-1" /> -->
-    <About id="about" />
+    <div id="background-section-1">
+      <img
+        class="bg-image is-hidden-tablet"
+        src="https://firebasestorage.googleapis.com/v0/b/hop-tlv.appspot.com/o/images%2FIMG_6314.jpg?alt=media&token=e7e6496d-01e6-41cc-a840-1032424804b2"
+        alt="Background image"
+      />
+      <Hero />
+      <About id="about" />
+    </div>
     <div id="productListAnchor" />
     <div id="background-section-1">
       <ProductList />
@@ -38,6 +44,13 @@ export default {
 </script>
 
 <style scoped>
+.bg-image {
+  position: absolute;
+  z-index: -999;
+  top: 0px;
+  left: 0;
+}
+
 #about {
   /* max-width: 800px; */
 }

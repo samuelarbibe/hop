@@ -1,6 +1,6 @@
 <template>
   <div class="container section">
-    <div class="columns">
+    <div class="columns columns-is-mobile">
       <div class="column title-container">
         <h2 class="subheader">The Tel-Aviv</h2>
         <h1 class="header">House of Pasta</h1>
@@ -113,6 +113,7 @@ img:hover {
   transform: scale(1.05);
 }
 
+
 .img-enter-active,
 .img-leave-active {
   /* animation: zoom-in 3s; */
@@ -137,6 +138,19 @@ img:hover {
   100% {
     /* opacity: 1; */
     transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .columns-is-mobile {
+    color: white;
+  }
+  .title-container {
+    align-items: center;
+    text-align: center;
+  }
+  .button {
+    background-color: rgba(255, 255, 255, 0.7) !important;
   }
 }
 </style>
