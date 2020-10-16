@@ -102,7 +102,7 @@ export default {
         onApprove: (data) => {
           self.onLoading();
           const chargingData = {
-            orderID: data.orderID,
+            orderId: data.orderID,
             shipping: lockedShippingOption,
           };
 

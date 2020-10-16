@@ -15,7 +15,7 @@ export default {
                 return res.json();
             })
             .then((data) => {
-                return data.orderID;
+                return data.orderId;
             }).catch((err) => {
                 console.error(err);
                 errorCb(err);
@@ -33,9 +33,7 @@ export default {
             .then((res) => {
                 if (!res.ok) {
                     throw Error(res.statusText);
-                }
-                this.updateStock(chargingData);
-                
+                }                
                 return res.json();
             }).then((details) => {
                 successCb(details);
