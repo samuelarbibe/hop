@@ -16,14 +16,14 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.config.productionTip = false
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD86UgZH4dSKIxaJj3MwKzC7HozhkDMI4U",
-  authDomain: "hop-tlv.firebaseapp.com",
-  databaseURL: "https://hop-tlv.firebaseio.com",
-  projectId: "hop-tlv",
-  storageBucket: "hop-tlv.appspot.com",
-  messagingSenderId: "1050183563912",
-  appId: "1:1050183563912:web:74749496d04c1f4f09fd3d",
-  measurementId: "G-31CKE5143V"
+  apiKey: process.env.VUE_APP_FIREBASE_CONFIG_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_CONFIG_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_CONFIG_DB_URL,
+  projectId: process.env.VUE_APP_FIREBASE_CONFIG_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_CONFIG_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_CONFIG_MSG_ID,
+  appId: process.env.VUE_APP_FIREBASE_CONFIG_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_CONFIG_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
