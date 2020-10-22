@@ -17,9 +17,9 @@ The project also includes an admin site to view purchases, control and edit prod
 For security reasons, that project's repository is kept private.
 
 ## Screenshots
-![Mobile screenshot](./screenshots/mobile_screenshot.jpg)
-![Desktop screenshot](./screenshots/dektop_screenshot.jpg)
-![Admin screesnhot](./screenshots/admin_screenshot.jpg)
+![Mobile screenshot](./screenshots/mobile_recording.gif)
+![Desktop screenshot](./screenshots/desktop_recording.gif)
+![Admin screesnhot](./screenshots/admin_recording.gif)
 
 ## Technologies
 * Vue - version 2.6.12
