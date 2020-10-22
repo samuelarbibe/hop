@@ -12,13 +12,20 @@
     <table class="table is-fullwidth">
       <tbody>
         <tr v-for="product in cartProducts" :key="product.id">
-          <td>
-            <img class="image is-128x128" :src="product.images[0]" :alt="product.name" />
+          <td class="pl-0">
+            <figure class="image is-64x64">
+              <img :src="product.images[0]" :alt="product.name" />
+            </figure>
           </td>
           <td>
             <div class="columns">
-              <div class="name column">
-                <p class="is-size-4">{{product.name}}</p>
+              <div class="name column pb-0">
+                <p class="is-size-4 is-size-6-mobile">
+                  <b>{{ product.name }}</b>
+                  <span>
+                    X{{ product.quantity }}
+                  </span>
+                </p>
               </div>
               <div class="quantity column is-narrow has-text-centered">
                 <div class="field has-addons">
@@ -33,7 +40,7 @@
                       </span>
                     </button>
                   </p>
-                  <b class="is-size-5 px-3 py-1">{{product.quantity}}</b>
+
                   <p v-if="isEditable" class="control">
                     <button
                       class="button is-disabled"
@@ -52,10 +59,15 @@
           <td>
             <div class="columns">
               <div class="column has-text-right">
-                <p class="is-size-4 price">{{product.quantity * product.price}} ₪</p>
+                <p class="is-size-4 is-size-6-mobile price">
+                  {{ product.quantity * product.price }} ₪
+                </p>
               </div>
               <div v-if="isEditable" class="column is-narrow">
-                <button class="button remove-button" @click="removeProduct(product)">
+                <button
+                  class="button remove-button"
+                  @click="removeProduct(product)"
+                >
                   <span class="icon has-text-danger is-size-4">
                     <i class="far fa-trash-alt"></i>
                   </span>
@@ -66,28 +78,32 @@
         </tr>
       </tbody>
     </table>
-    <div class="level is-mobile">
+    <div class="level is-mobile mb-3">
       <div class="level-left">
-        <h2 class="subtitle is-4">Subtotal</h2>
+        <h2 class="subtitle is-4 is-size-6-mobile">Subtotal</h2>
       </div>
       <div class="right">
-        <h2 class="subtitle is-4">{{cartSubtotalPrice}} ₪</h2>
+        <h2 class="subtitle is-4 is-size-6-mobile">
+          {{ cartSubtotalPrice }} ₪
+        </h2>
       </div>
     </div>
-    <div class="level is-mobile">
+    <div class="level is-mobile mb-3">
       <div class="level-left">
-        <h2 class="subtitle is-4">Shipping</h2>
+        <h2 class="subtitle is-4 is-size-6-mobile">Shipping</h2>
       </div>
       <div class="right">
-        <h2 class="subtitle is-4">{{cartShippingPrice}} ₪</h2>
+        <h2 class="subtitle is-4 is-size-6-mobile">
+          {{ cartShippingPrice }} ₪
+        </h2>
       </div>
     </div>
-    <div  class="level is-mobile">
+    <div class="level is-mobile mb-0">
       <div class="level-left">
-        <h2 class="title is-3">Total</h2>
+        <h2 class="title is-3 is-size-6-mobile">Total</h2>
       </div>
       <div class="right">
-        <h2 class="title is-3">{{cartTotalPrice}} ₪</h2>
+        <h2 class="title is-3 is-size-6-mobile">{{ cartTotalPrice }} ₪</h2>
       </div>
     </div>
   </div>
@@ -133,6 +149,10 @@ export default {
 
 .price {
   white-space: nowrap;
+}
+
+tr {
+  border-bottom: 1px solid rgba(100, 100, 100, 0.3);
 }
 
 .remove-button {

@@ -49,6 +49,8 @@ export default {
 
 <style scoped>
 .navbar {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   margin: 0px !important;
   z-index: 999;
   border-top: 1px solid rgba(100, 100, 100, 0.15);

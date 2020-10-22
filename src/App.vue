@@ -86,15 +86,10 @@ body {
 /* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Barlow&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
+
 h1 {
-  font-size: 40px;
   margin: 0 0 40px 0 !important;
   font-family: "Barlow";
-  font-weight: 600;
-}
-
-p {
-  /* font-family: "Rubik"; */
 }
 
 .section-button {
@@ -104,6 +99,7 @@ p {
   font-size: 25px !important;
   border: 0 !important;
 }
+
 @media (max-width: 768px) {
   .section-button {
     font-size: 20px !important;

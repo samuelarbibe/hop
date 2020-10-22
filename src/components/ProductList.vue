@@ -58,7 +58,7 @@ export default {
     return {
       selectedProduct: null,
       showPastaInfo: false,
-      productMobileHeight: 150,
+      productMobileHeight: 130,
     };
   },
   computed: {

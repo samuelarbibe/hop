@@ -18,13 +18,16 @@
       </p>
     </div>
     <div v-show="!isError && !isSuccess" class="columns mx-0">
+      <div class="column is-hidden-desktop is-hidden-tablet">
+        <ItemList />
+      </div>
       <div class="column">
         <div class="container">
-          <div class="notification container my-5">
-            <h2 class="subtitle" dir="rtl">
+          <div class="is-hidden-mobile notification container mb-5 pr-5 ">
+            <p class="subtitle is-size-5" dir="rtl">
               התשלום מתבצע באמצעות פייפל, וישנה האפשרות לשלם באמצעות חשבון
               PayPal או באמצעות כרטיס אשראי.
-            </h2>
+            </p>
           </div>
           <PayPalCheckout
             @loading="setLoading"

@@ -14,7 +14,7 @@
         'no-padding-x-mobile image-container-desktop': isSelected,
       }"
     >
-      <figure class="image is-1x1">
+      <figure :class="{ image: true, 'is-selected-mobile': isSelected }">
         <img :src="product.images[0]" :alt="`${product.name} Thumbnail`" />
         <button
           v-if="isSelected"
@@ -32,10 +32,7 @@
       >
         {{ product.name }}
       </p>
-      <p
-        class="is-size-6-mobile is-size-5-desktop has-text-grey-dark"
-        dir="rtl"
-      >
+      <p class="description is-size-5-desktop has-text-grey" dir="rtl">
         {{ product.description }}
       </p>
       <div class="columns is-mobile">
@@ -64,10 +61,12 @@
       :class="{ 'column is-narrow': true, 'is-hidden-mobile': !isSelected }"
       dir="ltr"
     >
-      <div class="columns is-mobile">
-        <div class="column is-size-6">
-          <span>Amount:</span>
-          <b class="pl-2">{{ quantity }}</b>
+      <div class="columns is-mobile product-options">
+        <div class="column is-size-6 amount-container">
+          <div class="amount-child">
+            <span>Amount:</span>
+            <b class="pl-2">{{ quantity }}</b>
+          </div>
         </div>
         <div class="column is-narrow">
           <div v-if="isInCart" class="field has-addons">
@@ -197,13 +196,13 @@ export default {
 
 .image {
   height: 100%;
+  /* display: flex; */
 }
 
 .image > img {
-  height: 100%;
-  object-fit: contain;
-  object-position: right;
-  /* border-radius: 5px;  */
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 a {
@@ -215,12 +214,22 @@ a {
     flex-direction: row;
     display: flex;
   }
+
   .no-padding-x-mobile {
     padding-right: 0px;
     padding-left: 0px;
   }
+
   .product-container-mobile {
-    height: 150px;
+    height: 130px;
+  }
+
+  .is-selected-mobile > img {
+    border-radius: 0px;
+  }
+
+  .description {
+    font-size: 14px;
   }
 }
 
@@ -239,6 +248,16 @@ a {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.product-options {
+  /* border-top: 1px solid rgba(100, 100, 100, 0.15); */
+}
+
+.amount-container {
+  display: flex;
+  align-items: center;
+}
+
 
 .is-product-in-cart {
   background-color: hsl(0, 0%, 96%);

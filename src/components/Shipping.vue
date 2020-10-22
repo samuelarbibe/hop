@@ -19,7 +19,7 @@
             v-else-if="selectedShippingOption && selectedShippingType"
             class="container"
           >
-            <div class="control is-size-4">
+            <div class="control">
               <div
                 v-for="shippingType in shippingTypes"
                 :key="shippingType.type"
@@ -28,7 +28,7 @@
                   dir="rtl"
                   @click="selectShippingType(shippingType)"
                   :class="{
-                    'button option-button px-5 ': true,
+                    'button option-button px-2 ': true,
                     'is-success':
                       shippingType.type == selectedShippingType.type,
                   }"
@@ -48,7 +48,7 @@
             </div>
 
             <div class="my-5" dir="rtl">
-              <h2 class="title is-4">בחר זמן</h2>
+              <h2 class="title is-5">בחר זמן</h2>
             </div>
             <div class="columns is-mobile">
               <div
@@ -91,8 +91,8 @@
                 </a>
               </div>
             </div>
-            <div class="notification container mt-5 mb-2" dir="rtl">
-              <p class="is-size-4">
+            <div class="notification container mt-5 mb-2 pr-5" dir="rtl">
+              <p class="is-size-5">
                 <b> {{ selectedShippingOption.title }} </b>
                 <br />
                 <span>
@@ -132,7 +132,7 @@
                 </span>
               </p>
             </div>
-            <div class="container" dir="rtl">
+            <div class="container pb-5" dir="rtl">
               <span> יש לכם שאלות? </span>
               <a href="https://wa.link/ywkq0q">דברו איתנו באווטסאפ</a>
             </div>
@@ -219,7 +219,7 @@ export default {
 .option-button {
   width: 100%;
   justify-content: right;
-  height: 60px;
+  height: 55px;
   border: 0;
 }
 
@@ -228,6 +228,6 @@ export default {
 }
 
 .date-button {
-  height: 100%
+  height: 100%;
 }
 </style>
