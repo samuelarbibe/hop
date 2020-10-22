@@ -1,8 +1,6 @@
 <template>
   <div id="paypal-button-container"></div>
 </template>
-<script
-    src="https://www.paypal.com/sdk/js?client-id=AfmG4QqEw-HCpIVoa0onYWSoeZAtRgXIPoe4_HNF1g_PGrG1PXkC_i8zQZYBFryvVdrL2XNU2kezJJ8l&currency=ILS"></script>
 <script>
 import { mapState, mapGetters } from "vuex";
 import checkout from "../api/checkout";
@@ -20,26 +18,20 @@ export default {
     }),
   },
   methods: {
-    setError() {
+    onError() {
       this.$emit("error");
     },
-    setProccesing() {
+    onLoading() {
       this.$emit("loading");
     },
-    setApproved() {
-      this.$emit("success");
+    onSuccess(details) {
+      this.$emit("success", details);
     },
-    getRequestBody() {
+    createOrderDetails() {
       return {
         intent: "CAPTURE",
         application_context: {
-          return_url:
-            window.location.origin +
-            this.$router.resolve({ name: "shop" }).href,
-          cancel_url:
-            window.location.origin +
-            this.$router.resolve({ name: "checkout" }).href,
-          brand_name: "HoP TLV",
+          brand_name: "HOP TLV",
           locale: "he-IL",
           landing_page: "BILLING",
           shipping_preference:
@@ -47,6 +39,14 @@ export default {
               ? "NO_SHIPPING"
               : "GET_FROM_FILE",
           user_action: "CONTINUE",
+        },
+        redirect_urls: {
+          return_url:
+            window.location.origin +
+            this.$router.resolve({ name: "process" }).href,
+          cancel_url:
+            window.location.origin +
+            this.$router.resolve({ name: "checkout" }).href,
         },
         purchase_units: [
           {
@@ -82,34 +82,42 @@ export default {
     },
   },
   mounted() {
-    const requestBodyRef = this.getRequestBody;
-    const processingRef = this.setProccesing;
-    const approvedRef = this.setApproved;
-    const errorRef = this.setError;
-    const shippingRef = this.selectedShippingOption;
+    const self = this;
+    let lockedOrderDetails = null;
+    let lockedShippingOption = null;
 
+    // eslint-disable-next-line no-undef
     paypal
       .Buttons({
         onClick: () => {
-          // TODO implement
-          // create request body
-          // remove all items from stock
+          self.$store.dispatch("cart/setIsCartLocked", true);
+          lockedOrderDetails = self.createOrderDetails();
+          lockedShippingOption = self.selectedShippingOption;
         },
-        createOrder: () => checkout.order(requestBodyRef(), errorRef),
-        onApprove: (data, actions) => {
-          processingRef();
+        createOrder: () =>
+          checkout.order({
+            orderDetails: lockedOrderDetails,
+            errorCb: self.onError,
+          }),
+        onApprove: (data) => {
+          self.onLoading();
           const chargingData = {
-            orderID: data.orderID,
-            shipping: shippingRef,
+            orderId: data.orderID,
+            shipping: lockedShippingOption,
           };
-          return checkout.charge(chargingData, actions, approvedRef, errorRef);
+
+          return checkout.charge({
+            chargingData: chargingData,
+            successCb: self.onSuccess,
+            errorCb: self.onError,
+          });
         },
         onShippingChange: (data, actions) =>
           checkout.checkShippingAddress(data, actions),
-        onCancle: () => {
-          // TODO implement
+        onError: () => self.onError(),
+        onCancel: () => {
+          self.$store.dispatch("cart/setIsCartLocked", false);
         },
-        onError: (err) => errorRef(),
       })
       .render("#paypal-button-container");
   },

@@ -1,15 +1,17 @@
 <template>
   <div id="app">
     <Navbar />
-    <CartNotSyncDialog v-if="!this.isCartSynced" />
-    <ShippingNotSyncDialog v-if="!this.isShippingSynced" />
+    <ShippingNotSyncDialog
+      v-if="!this.isCartLocked && !this.isShippingSynced"
+    />
+    <CartNotSyncDialog v-else-if="!this.isCartLocked && !this.isCartSynced" />
     <router-view class="frame" />
     <BottomNavbar v-if="cartItems.length > 0" />
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 import Navbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
@@ -26,23 +28,43 @@ export default {
   },
   created() {
     // this.$store.dispatch("cart/initStore");
-    this.$store.dispatch("cart/loadShippingOptions");
-    this.$store.dispatch("products/getAllProducts");
+    this.$store.dispatch("shop/loadShopStatus");
   },
   computed: {
     ...mapState({
+      shopStatus: (state) => state.shop.status,
       cartItems: (state) => state.cart.items,
       isCartSynced: (state) => state.cart.isCartSynced,
+      isCartLocked: (state) => state.cart.isCartLocked,
       isShippingSynced: (state) => state.cart.isShippingSynced,
     }),
+    ...mapGetters("shop", ["isShopOpen"]),
+  },
+  watch: {
+    shopStatus: {
+      handler() {
+        if (this.shopStatus != null) {
+          if (this.isShopOpen) {
+            this.$store.dispatch("cart/loadShippingOptions");
+            this.$store.dispatch("products/loadProducts");
+          } else {
+            this.$store.dispatch("cart/unloadShippingOptions");
+            this.$store.dispatch("products/unloadProducts");
+            if (!this.isCartLocked) {
+              this.$router.push({ name: "shop" }).catch(() => {});
+            }
+          }
+        }
+      },
+    },
   },
 };
 </script>
 
 <style scoped>
 .frame {
-  margin-top: 60px;
-  margin-bottom: 60px;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 </style>
 
@@ -60,13 +82,38 @@ body {
 
 @import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dosis&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Barlow&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap");
+
 h1 {
-  font-family: "Barlow Condensed", "Rubik";
+  margin: 0 0 40px 0 !important;
+  font-family: "Barlow";
 }
 
-p {
-  font-family: "Rubik";
+.section-button {
+  background-color: rgba(247, 247, 247, 1) !important;
+  color: rgb(100, 100, 100) !important;
+  font-weight: bold !important;
+  font-size: 25px !important;
+  border: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .section-button {
+    font-size: 20px !important;
+  }
+}
+
+.whatsapp-button {
+  background-color: hsl(141, 53%, 53%) !important;
+  color: white !important;
+}
+
+.section-subtitle {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0 0 40px 0px !important;
 }
 </style>

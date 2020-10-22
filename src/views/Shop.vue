@@ -2,12 +2,16 @@
   <div>
     <div id="heroAnchor" />
     <Hero />
-    <About />
+    <About id="about" />
     <div id="productListAnchor" />
-    <ProductList />
+    <div id="background-section-1">
+      <ProductList />
+    </div>
     <InstagramGallery />
     <Contact />
-    <Newsletter />
+    <div id="background-section-2">
+      <Newsletter />
+    </div>
   </div>
 </template>
 
@@ -33,6 +37,14 @@ export default {
 </script>
 
 <style scoped>
+.bg-image {
+  position: absolute;
+  width: 100%;
+  z-index: -999;
+  top: 0px;
+  left: 0;
+}
+
 #productListAnchor {
   display: block;
   position: relative;
@@ -45,5 +57,17 @@ export default {
   position: relative;
   top: -60px;
   visibility: hidden;
+}
+
+#background-section-1 {
+  margin-top: -220px;
+  padding-top: 200px;
+  /* background-color: rgb(246, 246, 246); */
+}
+
+#background-section-2 {
+  padding-bottom: 60px;
+  margin-bottom: -60px;
+  background-color: rgb(246, 246, 246);
 }
 </style>

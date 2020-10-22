@@ -6,21 +6,18 @@
           <i class="fas fa-info-circle fa-lg"></i>
         </span>
       </div>
-      <h2 class="title is-3">שינוי במלאי</h2>
-      <p class="subtitle is-size-5">
-        חלק מהמוצרים שבחרת כבר לא זמינים. עבור על העגלה שלך שוב כדי לוודא
-      </p>
-      <button class="button is-info" @click="setSynced()">עבור לעגלה</button>
+      <h2 class="title is-3">החנות סגורה!</h2>
+      <p class="subtitle is-size-5">אנו מצטערים, אך החנות נסגרה</p>
+      <button class="button is-info" @click="ok()">חזור לדף הבית</button>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "cart-not-synced-dialog",
+  name: "shop-closed-dialog",
   methods: {
-    setSynced() {
+    ok() {
       this.$router.push({ name: "shop" }).catch(() => {});
-      this.$store.dispatch("cart/setIsCartSynced", true);
     },
   },
 };

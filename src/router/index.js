@@ -18,10 +18,6 @@ const router = new VueRouter({
             path: '/shipping',
             name: 'shipping',
             component: Shipping,
-            beforeEnter(to, from, next) {
-                if (store.state.cart.items.length == 0) next({ name: "shop" });
-                next();
-            },
         },
         {
             path: '/checkout',
@@ -33,6 +29,11 @@ const router = new VueRouter({
             }
         },
     ]
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.name != 'shop' && store.state.cart.items.length == 0) next({ name: "shop" });
+    next();
 });
 
 export default router;

@@ -6,7 +6,7 @@
   >
     <div class="column">
       <div class="cart-price ml-2">
-        <b class="is-size-5">{{price}} ₪</b>
+        <b class="is-size-5">{{ price }} ₪</b>
       </div>
     </div>
     <div class="column is-narrow">
@@ -49,9 +49,13 @@ export default {
 
 <style scoped>
 .navbar {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   margin: 0px !important;
   z-index: 999;
+  border-top: 1px solid rgba(100, 100, 100, 0.15);
 }
+
 .cart-price {
   display: flex;
   height: 100%;

@@ -1,134 +1,106 @@
 <template>
   <div
+    dir="rtl"
     :class="{
-      'px-0 mx-0': true,
-      'is-product-in-cart': isInCart,
-      'is-selected': isSelected && !isInCart,
+      'columns product-container my-0': true,
+      'is-row-reverse-mobile product-container-mobile': !isSelected,
     }"
-
   >
     <a
-      v-show="!isSelected"
-      class="product-listing has-text-black columns is-mobile has-text-left my-0 mx-0"
-      @click="select()"
+      @click="click()"
+      :class="{
+        'column image-container': true,
+        'is-one-third-mobile': !isSelected,
+        'no-padding-x-mobile image-container-desktop': isSelected,
+      }"
     >
-      <div class="column product-info">
-        <p class="is-size-5-mobile is-size-4-desktop">{{ product.name }}</p>
-        <p class="is-size-6-mobile is-size-5-desktop" dir="rtl">
-          {{ product.description }}
-        </p>
-        <div class="bottom-content">
-          <div class="columns is-mobile">
-            <div class="column">
-              <span v-if="isInCart" class="is-size-6-mobile is-size-5-desktop"
-                >{{ product.price * quantity }} ₪</span
-              >
-              <span v-else class="is-size-6-mobile is-size-5-desktop"
-                >{{ product.price }} ₪</span
-              >
-            </div>
-            <div v-if="!isInStock" class="column has-text-right">
-              <span class="has-text-danger is-size-6-mobile is-size-5-desktop"
-                >לא במלאי</span
-              >
-            </div>
-            <div
-              v-else-if="isInCart"
-              class="column has-text-right has-text-info mr-2"
-            >
-              <b class="is-size-5-mobile is-size-4-desktop">X{{ quantity }}</b>
-            </div>
+      <figure :class="{ image: true, 'is-selected-mobile': isSelected }">
+        <img :src="product.images[0]" :alt="`${product.name} Thumbnail`" />
+        <button
+          v-if="isSelected"
+          class="button is-rounded close-button is-hidden-desktop"
+        >
+          <div class="icon is-large">
+            <i class="fas fa-times fa-lg"></i>
           </div>
+        </button>
+      </figure>
+    </a>
+    <a @click="click()" class="column product-info" dir="ltr">
+      <p
+        class="is-size-6-mobile is-size-4-desktop has-text-black-ter has-text-weight-semibold"
+      >
+        {{ product.name }}
+      </p>
+      <p class="description is-size-5-desktop has-text-grey" dir="rtl">
+        {{ product.description }}
+      </p>
+      <div class="columns is-mobile">
+        <div class="column">
+          <span v-if="isInCart" class="is-size-6-mobile is-size-5-desktop"
+            >{{ product.price * quantity }} ₪</span
+          >
+          <span v-else class="is-size-6-mobile is-size-5-desktop"
+            >{{ product.price }} ₪</span
+          >
         </div>
-      </div>
-      <div class="column is-one-third-mobile">
-        <figure class="image is-1x1">
-          <img :src="product.images[0]" :alt="`${product.name} Thumbnail`" />
-        </figure>
+        <div v-if="!isInStock" class="column has-text-right">
+          <span class="has-text-danger is-size-6-mobile is-size-5-desktop"
+            >לא במלאי</span
+          >
+        </div>
+        <div
+          v-else-if="isInCart"
+          class="column has-text-right has-text-info mr-2"
+        >
+          <b class="is-size-5-mobile is-size-4-desktop">X{{ quantity }}</b>
+        </div>
       </div>
     </a>
-    <div v-show="isSelected" class="product-details">
-      <a class="column is-full-mobile px-0 py-0">
-        <div class="container">
-          <carousel :per-page="1">
-            <slide class="slide" v-for="image in product.images" :key="image">
-              <img class="slide-image" :src="image" alt="Placeholder image" />
-            </slide>
-          </carousel>
-          <button class="button is-rounded close-button" @click="unselect()">
-            <div class="icon is-large">
-              <i class="fas fa-times fa-lg"></i>
-            </div>
-          </button>
-        </div>
-      </a>
-      <div class="column product-info mx-3">
-        <h1 class="title is-3">{{ product.name }}</h1>
-        <h2 class="subtitle is-4" dir="rtl">{{ product.description }}</h2>
-        <div class="bottom-content">
-          <div class="columns is-mobile">
-            <div class="column">
-              <span v-if="isInCart" class="is-size-5-mobile is-size-4-desktop"
-                >{{ product.price * quantity }} ₪</span
-              >
-              <span v-else class="is-size-5-mobile is-size-4-desktop"
-                >{{ product.price }} ₪</span
-              >
-            </div>
-            <div v-if="!isInStock" class="column has-text-right">
-              <span class="has-text-danger is-size-6-mobile is-size-5-desktop"
-                >לא במלאי</span
-              >
-            </div>
-            <div
-              v-else-if="isInCart"
-              class="column has-text-right has-text-info mr-2"
-            >
-              <b class="is-size-5-mobile is-size-4-desktop">X{{ quantity }}</b>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="column container mx-3">
-        <div class="columns is-mobile">
-          <div class="column is-size-5">
+    <div
+      :class="{ 'column is-narrow': true, 'is-hidden-mobile': !isSelected }"
+      dir="ltr"
+    >
+      <div class="columns is-mobile product-options">
+        <div class="column is-size-6 amount-container">
+          <div class="amount-child">
             <span>Amount:</span>
             <b class="pl-2">{{ quantity }}</b>
           </div>
-          <div class="column is-narrow">
-            <div v-if="isInCart" class="field has-addons">
-              <p class="control">
-                <button
-                  class="button"
-                  @click="addToCart(product)"
-                  :disabled="quantity >= product.inventory"
-                >
-                  <span class="icon is-large">
-                    <i class="fas fa-plus fa-md"></i>
-                  </span>
-                </button>
-              </p>
-              <p class="control">
-                <button
-                  class="button is-disabled"
-                  @click="decrementQuantity(product)"
-                  :disabled="quantity == 0"
-                >
-                  <span class="icon is-large">
-                    <i class="fas fa-minus fa-md"></i>
-                  </span>
-                </button>
-              </p>
-            </div>
-            <button
-              v-else
-              class="button add-button is-info buy-button"
-              :disabled="!canAddToCart"
-              @click="addToCart(product)"
-            >
-              Add to Cart
-            </button>
+        </div>
+        <div class="column is-narrow">
+          <div v-if="isInCart" class="field has-addons">
+            <p class="control">
+              <button
+                class="button"
+                @click="addToCart(product)"
+                :disabled="quantity >= product.inventory"
+              >
+                <span class="icon is-large">
+                  <i class="fas fa-plus fa-md"></i>
+                </span>
+              </button>
+            </p>
+            <p class="control">
+              <button
+                class="button is-disabled"
+                @click="decrementQuantity(product)"
+                :disabled="quantity == 0"
+              >
+                <span class="icon is-large">
+                  <i class="fas fa-minus fa-md"></i>
+                </span>
+              </button>
+            </p>
           </div>
+          <button
+            v-else
+            class="button add-button is-info buy-button"
+            :disabled="!canAddToCart"
+            @click="addToCart(product)"
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
@@ -139,7 +111,7 @@ import { mapState } from "vuex";
 
 export default {
   name: "product",
-  props: ["product"],
+  props: ["product", "height"],
   data() {
     return {
       isSelected: false,
@@ -170,8 +142,11 @@ export default {
     },
   },
   methods: {
-    select() {
+    click() {
+      this.isSelected ? this.unselect() : this.select();
       this.$emit("select");
+    },
+    select() {
       this.isSelected = true;
     },
     unselect() {
@@ -199,11 +174,63 @@ export default {
 </script>
 
 <style scoped>
-
-.product-listing {
+.product-container {
   background-color: transparent;
-  border: 0;
+  flex-direction: column;
+  height: 100%;
   margin: 0px;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.15);
+}
+
+.image-container-desktop {
+  width: 100%;
+}
+
+.image-container {
+  transition: width 0.3s, padding 0.3s ease-in-out;
+}
+
+.product-container {
+  transition: height 0.2s ease-in-out;
+}
+
+.image {
+  height: 100%;
+  /* display: flex; */
+}
+
+.image > img {
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+a {
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .is-row-reverse-mobile {
+    flex-direction: row;
+    display: flex;
+  }
+
+  .no-padding-x-mobile {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  .product-container-mobile {
+    height: 130px;
+  }
+
+  .is-selected-mobile > img {
+    border-radius: 0px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
 }
 
 .close-button {
@@ -212,7 +239,8 @@ export default {
   top: 10px;
   right: 10px;
   border: 0;
-  opacity: 0.9;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .product-info {
@@ -220,6 +248,16 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.product-options {
+  /* border-top: 1px solid rgba(100, 100, 100, 0.15); */
+}
+
+.amount-container {
+  display: flex;
+  align-items: center;
+}
+
 
 .is-product-in-cart {
   background-color: hsl(0, 0%, 96%);

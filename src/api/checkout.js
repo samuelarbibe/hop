@@ -2,40 +2,66 @@ import 'firebase/firebase-firestore';
 import 'firebase/firebase-functions';
 
 export default {
-    order(data, errorCb) {
+
+    order({ orderDetails, errorCb }) {
         return fetch(`${process.env.VUE_APP_FUNCTIONS_HOST}/order`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(orderDetails),
         })
-            .then(function (res) {
+            .then((res) => {
                 return res.json();
             })
-            .then(function (data) {
-                return data.orderID;
+            .then((data) => {
+                return data.orderId;
             }).catch((err) => {
                 console.error(err);
                 errorCb(err);
             });
     },
-    charge(data, actions, successCb, errorCb) {
+
+    charge({ chargingData, successCb, errorCb }) {
         return fetch(`${process.env.VUE_APP_FUNCTIONS_HOST}/charge`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(chargingData),
         })
-            .then(() => {
-                successCb();
+            .then((res) => {
+                if (!res.ok) {
+                    throw Error(res.statusText);
+                }                
+                return res.json();
+            }).then((details) => {
+                successCb(details);
             })
             .catch((err) => {
                 console.error(err);
                 errorCb();
             });
     },
+
+    updateStock(orderData) {
+        return fetch(`${process.env.VUE_APP_FUNCTIONS_HOST}/updateStock`, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw Error(res.statusText);
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    },
+
     checkShippingAddress(data, actions) {
         const zipCode = data.shipping_address.postal_code;
         if (zipCode >= 61000 && zipCode <= 76104) {

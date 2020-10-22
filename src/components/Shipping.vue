@@ -1,6 +1,6 @@
 <template>
   <div class="container section">
-    <h1 class="title is-3 shipping-header">Shipping</h1>
+    <h2 class="title is-3 shipping-header mt-4">Shipping</h2>
     <div class="columns mx-0">
       <div class="column">
         <div class="container">
@@ -10,73 +10,69 @@
             </span>
           </div>
           <div v-else-if="isError" class="notification is-danger">
-            <h1 class="title is-4">
+            <h2 class="title is-4">
               There was an error loading the shipping options.
-            </h1>
+            </h2>
             <h2 class="subtitle">Please try again later.</h2>
           </div>
-          <div v-else-if="selectedShippingOption != null" class="container">
-            <div class="control is-size-4">
-              <div v-for="option in shippingOptions" :key="option.id">
+          <div
+            v-else-if="selectedShippingOption && selectedShippingType"
+            class="container"
+          >
+            <div class="control">
+              <div
+                v-for="shippingType in shippingTypes"
+                :key="shippingType.type"
+              >
                 <button
                   dir="rtl"
-                  @click="selectShippingOption(option.id)"
+                  @click="selectShippingType(shippingType)"
                   :class="{
-                    'button option-button px-3': true,
-                    'is-success': selectedShippingOption.id == option.id,
+                    'button option-button px-2 ': true,
+                    'is-success':
+                      shippingType.type == selectedShippingType.type,
                   }"
                 >
-                  <span class="icon">
-                    <i
-                      v-if="selectedShippingOption.id == option.id"
-                      class="fas fa-dot-circle"
-                    ></i>
-                    <i v-else class="far fa-circle"></i>
-                  </span>
-                  <span class="mr-3 is-size-5">{{ option.title }}</span>
+                  <p class="has-text-right">
+                    <span class="icon">
+                      <i
+                        v-if="shippingType.type == selectedShippingType.type"
+                        class="fas fa-dot-circle"
+                      ></i>
+                      <i v-else class="far fa-circle"></i>
+                    </span>
+                    <b class="mr-3 is-size-5">{{ shippingType.title }}</b>
+                  </p>
                 </button>
               </div>
             </div>
-            <div class="notification container mt-5 mb-2" dir="rtl">
-              <h2 class="subtitle">{{ selectedShippingOption.description }}</h2>
-            </div>
+
             <div class="my-5" dir="rtl">
-              <h1
-                v-if="selectedShippingOption.dates.length > 1"
-                class="title is-4"
-              >
-                בחר זמן משלוח
-              </h1>
-              <h1 v-else class="title is-4">זמן משלוח</h1>
+              <h2 class="title is-5">בחר זמן</h2>
             </div>
-            <div
-              class="columns is-mobile"
-              :key="selectedShippingOption.selectedShippingDate.id"
-            >
+            <div class="columns is-mobile">
               <div
                 class="column"
-                v-for="date in selectedShippingOption.dates"
-                :key="date.id"
+                v-for="option in filteredShippingOptions"
+                :key="option.id"
                 dir="rtl"
               >
-                <a @click="selectShippingDateOption(date.id)">
+                <a @click="selectShippingOption(option.id)">
                   <div
                     :class="{
                       'notification date-button px-4': true,
-                      'is-info':
-                        selectedShippingOption.selectedShippingDate.id ==
-                        date.id,
+                      'is-info': selectedShippingOption.id == option.id,
                     }"
                   >
                     <p>
                       {{
-                        new Date(date.from).toLocaleString("he-IL", {
+                        new Date(option.date.from).toLocaleString("he-IL", {
                           weekday: "long",
                         })
                       }}
                       בין
                       {{
-                        new Date(date.from).toLocaleTimeString([], {
+                        new Date(option.date.from).toLocaleTimeString([], {
                           hour12: false,
                           hour: "2-digit",
                           minute: "2-digit",
@@ -84,7 +80,7 @@
                       }}
                       ל-
                       {{
-                        new Date(date.to).toLocaleTimeString([], {
+                        new Date(option.date.to).toLocaleTimeString([], {
                           hour12: false,
                           hour: "2-digit",
                           minute: "2-digit",
@@ -95,11 +91,56 @@
                 </a>
               </div>
             </div>
+            <div class="notification container mt-5 mb-2 pr-5" dir="rtl">
+              <p class="is-size-5">
+                <b> {{ selectedShippingOption.title }} </b>
+                <br />
+                <span>
+                  ב{{
+                    new Date(selectedShippingOption.date.from).toLocaleString(
+                      "he-IL",
+                      {
+                        weekday: "long",
+                      }
+                    )
+                  }}
+                  בין
+                  {{
+                    new Date(
+                      selectedShippingOption.date.from
+                    ).toLocaleTimeString([], {
+                      hour12: false,
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  }}
+                  ל-
+                  {{
+                    new Date(selectedShippingOption.date.to).toLocaleTimeString(
+                      [],
+                      {
+                        hour12: false,
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )
+                  }}
+                </span>
+                <br />
+                <span v-if="selectedShippingOption.type === 'PICKUP'">
+                  {{ selectedShippingOption.description }}
+                </span>
+              </p>
+            </div>
+            <div class="container pb-5" dir="rtl">
+              <span> יש לכם שאלות? </span>
+              <a href="https://wa.link/ywkq0q">דברו איתנו באווטסאפ</a>
+            </div>
           </div>
           <div v-else class="notification is-danger">
-            <h1 class="title is-4">
+            <h2 class="title is-4">
               There was an error loading the shipping options.
-            </h1>
+            </h2>
             <h2 class="subtitle">Please try again later.</h2>
           </div>
         </div>
@@ -117,6 +158,11 @@ import ItemList from "./ItemList";
 
 export default {
   name: "shipping",
+  data() {
+    return {
+      selectedShippingType: null,
+    };
+  },
   components: {
     ItemList,
   },
@@ -127,21 +173,43 @@ export default {
       isLoading: (state) => state.cart.isLoading,
       isError: (state) => state.cart.isError,
     }),
+    shippingTypes() {
+      let types = [];
+
+      this.shippingOptions.forEach((option) => {
+        if (!types.find((type) => type.type === option.type)) {
+          types.push({
+            type: option.type,
+            title: option.title,
+          });
+        }
+      });
+
+      return types;
+    },
+    filteredShippingOptions() {
+      return this.shippingOptions.filter(
+        (option) => option.type === this.selectedShippingType.type
+      );
+    },
   },
   mounted() {
-    if (this.selectedShippingOption == null) {
+    if (this.selectedShippingOption === null) {
       this.selectShippingOption(this.shippingOptions[0].id);
     }
+
+    this.selectedShippingType = {
+      type: this.selectedShippingOption.type,
+      title: this.selectedShippingOption.title,
+    };
   },
   methods: {
     selectShippingOption(optionId) {
       this.$store.dispatch("cart/setSelectedShippingOption", optionId);
     },
-    selectShippingDateOption(dateId) {
-      this.$store.dispatch("cart/setSelectedShippingDateOption", {
-        optionId: this.selectedShippingOption.id,
-        dateId: dateId,
-      });
+    selectShippingType(shippingType) {
+      this.selectedShippingType = shippingType;
+      this.selectShippingOption(this.filteredShippingOptions[0].id);
     },
   },
 };
@@ -151,11 +219,15 @@ export default {
 .option-button {
   width: 100%;
   justify-content: right;
-  height: 60px;
+  height: 55px;
   border: 0;
 }
 
 .date-button {
   white-space: normal;
+}
+
+.date-button {
+  height: 100%;
 }
 </style>

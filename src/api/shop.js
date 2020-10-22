@@ -3,11 +3,28 @@ import 'firebase/firebase-firestore';
 import 'firebase/firebase-functions';
 
 export default {
-    updateProducts({ updateCb, errorCb, finallyCb }) {
+    subscribeToShopStatus({ updateCb, errorCb }) {
+        const db = firebase.firestore();
+        const statusRef = db.collection("statuses").where("name", "==", "shop");
+
+        return statusRef.onSnapshot((snapshot) => {
+            if (!snapshot.empty) {
+                const doc = snapshot.docs[0];
+                let status = doc.data();
+                status.id = doc.id;
+                updateCb(status);
+            } else {
+                errorCb('no shop status found');
+            }
+
+        }, errorCb)
+    },
+
+    subscribeToProducts({ updateCb, errorCb }) {
         const db = firebase.firestore();
         const productsRef = db.collection("products").where("inventory", ">", 0);
 
-        productsRef.onSnapshot((snapshot) => {
+        return productsRef.onSnapshot((snapshot) => {
             let updatedProducts = [];
             snapshot.forEach((doc) => {
                 let product = doc.data();
@@ -15,14 +32,14 @@ export default {
                 updatedProducts.push(product);
             });
             updateCb(updatedProducts);
-        }, errorCb, finallyCb)
+        }, errorCb);
     },
 
     updateShippingOptions({ updateShippingCb, errorCb }) {
         const db = firebase.firestore();
         const shippingRef = db.collection("shipping").where("inventory", ">", 0);
 
-        shippingRef.onSnapshot((snapshot) => {
+        return shippingRef.onSnapshot((snapshot) => {
             let updatedShippingOptions = [];
             snapshot.forEach((doc) => {
                 let option = doc.data();
@@ -33,11 +50,11 @@ export default {
         }, errorCb);
     },
 
-    subscribeToNewsletter(email, { successCb, usedEmailCb, errorCb }) {
+    subscribeToNewsletter({ email, successCb, usedEmailCb, errorCb }) {
         const db = firebase.firestore();
         const subsRef = db.collection("subscribers");
 
-        subsRef.where("email", "==", email).get().then((snapshot) => {
+        return subsRef.where("email", "==", email).get().then((snapshot) => {
             if (!snapshot.empty) {
                 usedEmailCb();
             } else {

@@ -1,37 +1,43 @@
+/* eslint-disable no-debugger */
 <template>
-  <div class="container">
-    <div v-if="isLoading" class="loading has-text-centered">
+  <div class="container section px-0">
+    <div
+      v-if="isProductsLoading || isStatusLoading"
+      class="loading has-text-centered"
+    >
       <span class="is-1 icon is-large">
         <i class="fas fa-spinner fa-pulse fa-lg"></i>
       </span>
     </div>
-    <div v-else-if="isError" class="notification is-danger">
-      <h1 class="title is-4">There was an error loading the site</h1>
+    <div
+      v-else-if="isProductsError || isStatusError"
+      class="notification is-danger"
+    >
+      <h2 class="title is-4">There was an error loading the site</h2>
       <h2 class="subtitle">Please try again later.</h2>
     </div>
     <div v-else class="">
-      <h1 class="title is-3 mx-4 my-5">Menu</h1>
-      <div class="columns mx-0 my-0 is-multiline" id="productList">
-        <div
-          class="column px-0 is-one-third is-narrow"
-          v-for="product in pastaProducts"
-          :key="product.id"
-        >
-          <product
-            ref="products"
-            :product="product"
-            @select="unslectOtherProducts"
-          />
+      <div class="container section">
+        <div class="title has-text-centered">
+          <h1>Menu</h1>
         </div>
+      </div>
+      <div v-if="!isShopOpen" class="has-text-centered">
+        <h1 class="title">{{ status.title }}</h1>
+        <p class="is-size-4">{{ status.text }}</p>
+      </div>
+      <div v-else class="columns mx-0 my-0 is-multiline">
+        <div class="product-anchor" id="firstItemAnchor" />
         <div
-          class="column px-0 is-one-third is-narrow"
-          v-for="product in otherProducts"
-          :key="product.id"
+          class="column px-0 is-one-third py-0"
+          v-for="(product, index) in products"
+          :key="index"
         >
           <product
             ref="products"
             :product="product"
-            @select="unslectOtherProducts"
+            :height="productMobileHeight"
+            @select="scrollToSelected(product)"
           />
         </div>
       </div>
@@ -52,18 +58,48 @@ export default {
     return {
       selectedProduct: null,
       showPastaInfo: false,
+      productMobileHeight: 130,
     };
   },
   computed: {
     ...mapState({
-      isLoading: (state) => state.products.isLoading,
-      isError: (state) => state.products.isError,
+      status: (state) => state.shop.status,
+      isStatusLoading: (state) => state.shop.isLoading,
+      isStatusError: (state) => state.shop.isError,
+      products: (state) => state.products.all,
+      isProductsLoading: (state) => state.products.isLoading,
+      isProductsError: (state) => state.products.isError,
     }),
+    ...mapGetters("shop", ["isShopOpen"]),
     ...mapGetters("products", ["pastaProducts", "otherProducts"]),
   },
   methods: {
-    unslectOtherProducts() {
-      this.$refs.products.forEach((product) => product.unselect());
+    unslectOtherProducts(selectedProduct) {
+      this.$refs.products
+        .filter((product) => product.product.id !== selectedProduct.id)
+        .forEach((product) => product.unselect());
+    },
+    scrollToSelected(selectedProduct) {
+      this.unslectOtherProducts(selectedProduct);
+
+      const selectedIndex = this.$refs.products.findIndex(
+        (product) => product.product.id === selectedProduct.id
+      );
+      if (window.innerWidth < 769) {
+        let offset = 12;
+
+        offset += selectedIndex * this.productMobileHeight;
+
+        if (!this.$refs.products[selectedIndex].isSelected) {
+          offset -= 200;
+        }
+
+        this.$scrollTo(`#firstItemAnchor`, 300, {
+          offset: offset,
+          easing: "ease",
+        });
+        this.selectedProduct = selectedProduct;
+      }
     },
   },
 };
@@ -74,4 +110,10 @@ export default {
   text-align: center;
 }
 
+#firstItemAnchor {
+  display: block;
+  position: relative;
+  top: -60px;
+  visibility: hidden;
+}
 </style>
